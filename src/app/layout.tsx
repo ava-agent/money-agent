@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +15,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "汇率换算器 - 各国货币实时换算",
-  description: "支持全球主要货币的实时汇率换算工具，包括人民币、美元、欧元、日元、英镑等18种货币。",
+  title: {
+    default: "MoneyAgent - 用 AI 赚钱的完全指南",
+    template: "%s | MoneyAgent",
+  },
+  description:
+    "33 种经过验证的 AI 赚钱方法，5 大高收入商业模式，实用工具和入门指南。",
 };
 
 export default function RootLayout({
@@ -25,9 +31,11 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        {children}
+        <Navbar />
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );

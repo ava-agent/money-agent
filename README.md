@@ -1,44 +1,71 @@
-# 汇率换算器
+# MoneyAgent - 用 AI 赚钱的完全指南
 
-基于 Next.js 构建的各国货币实时换算网站。
+基于 Next.js + Supabase 构建的 AI 赚钱方法指南网站。
+
+**在线访问**: [money-agent-beryl.vercel.app](https://money-agent-beryl.vercel.app)
 
 ## 功能
 
-- **实时汇率** — 通过 ExchangeRate-API 获取最新汇率数据
-- **18 种主要货币** — CNY、USD、EUR、GBP、JPY、KRW、HKD、TWD、SGD、AUD、CAD、CHF、NZD、THB、MYR、PHP、INR、RUB
-- **双向换算** — 在源和目标输入框均可输入金额，自动计算对方
-- **一键交换** — 点击交换按钮快速互换货币
-- **智能防重** — 选择相同货币时自动交换另一方
-- **响应式设计** — 适配桌面和移动端
+- **33 种赚钱方法** — 涵盖工作替代、投资管理、内容生产、技术服务等 8 大类别
+- **5 大商业模式** — 月入 $10K+ 的商业模式详解，含定价策略和实际案例
+- **分类筛选** — 按类别快速筛选，找到适合你的方法
+- **汇率换算器** — 支持 18 种主要货币的实时换算
+- **入门指南** — 安装部署教程、成本优化和 30 天路线图
+- **风险提示** — 安全加固指南和竞品对比分析
+- **Markdown 渲染** — 表格、代码块、列表等富文本内容展示
 
 ## 技术栈
 
-- **框架**: Next.js 16 (App Router) + TypeScript
-- **样式**: Tailwind CSS 4
-- **汇率 API**: [ExchangeRate-API](https://open.er-api.com/) (免费，无需 API Key)
-- **缓存**: 服务端内存缓存，10 分钟 TTL
+| 技术 | 用途 |
+|------|------|
+| Next.js 16 (App Router) | 全栈框架 |
+| TypeScript | 类型安全 |
+| Tailwind CSS 4 | 样式系统 |
+| Supabase | PostgreSQL 数据库 |
+| Vercel | 部署平台 |
+| react-markdown | 内容渲染 |
+| ExchangeRate-API | 实时汇率 |
+
+## 页面架构
+
+| 路由 | 内容 | 渲染方式 |
+|------|------|----------|
+| `/` | 首页 Hero + 功能卡片 | Static |
+| `/methods` | 33 种方法卡片 + 8 类筛选 | ISR (1h) |
+| `/methods/[slug]` | 方法详情 (Markdown) | SSG + ISR |
+| `/models` | 5 大商业模式详解 | ISR (1h) |
+| `/guide` | 入门指南 + 安装教程 | ISR (1h) |
+| `/tools` | 汇率换算器 | Static + Client |
+| `/about` | 关于 + 风险提示 + 竞品对比 | Static |
 
 ## 项目结构
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx            # 根布局
-│   ├── page.tsx              # 主页面
-│   ├── globals.css           # 全局样式
-│   └── api/rates/route.ts    # 汇率代理 API
+│   ├── layout.tsx                 # 根布局 (Navbar + Footer)
+│   ├── page.tsx                   # 首页
+│   ├── methods/page.tsx           # 方法列表
+│   ├── methods/[slug]/page.tsx    # 方法详情
+│   ├── models/page.tsx            # 商业模式
+│   ├── guide/page.tsx             # 入门指南
+│   ├── tools/page.tsx             # 工具集
+│   ├── about/page.tsx             # 关于页
+│   └── api/rates/route.ts        # 汇率代理 API
 ├── components/
-│   ├── CurrencyConverter.tsx # 主换算器组件
-│   ├── CurrencySelect.tsx    # 货币下拉选择
-│   ├── AmountInput.tsx       # 金额输入框
-│   ├── SwapButton.tsx        # 交换按钮
-│   └── RateDisplay.tsx       # 汇率信息显示
+│   ├── layout/                    # Navbar, Footer
+│   ├── home/                      # HeroSection, FeatureCard
+│   ├── methods/                   # MethodCard, MethodGrid, CategoryFilter
+│   ├── models/                    # BusinessModelCard
+│   ├── shared/                    # MarkdownRenderer, Badge, PageHeader
+│   └── (汇率组件)                  # CurrencyConverter, CurrencySelect 等
 ├── hooks/
-│   └── useExchangeRate.ts    # 汇率数据 Hook
+│   └── useExchangeRate.ts
 └── lib/
-    ├── types.ts              # TypeScript 类型
-    ├── currencies.ts         # 货币元数据
-    └── cache.ts              # 服务端缓存
+    ├── supabase/                  # server.ts, types.ts
+    ├── types.ts
+    ├── currencies.ts
+    └── cache.ts
 ```
 
 ## 快速开始
@@ -47,45 +74,32 @@ src/
 # 安装依赖
 npm install
 
+# 配置环境变量
+cp .env.local.example .env.local
+# 填入 NEXT_PUBLIC_SUPABASE_URL 和 NEXT_PUBLIC_SUPABASE_ANON_KEY
+
 # 启动开发服务器
 npm run dev
 
 # 构建生产版本
 npm run build
-
-# 启动生产服务器
-npm start
 ```
 
-访问 http://localhost:3000 即可使用。
+## 数据库 (Supabase)
 
-## API
+4 张数据表：
 
-### GET /api/rates?base=USD
+- `categories` — 8 大方法分类
+- `methods` — 33 种赚钱方法
+- `business_models` — 5 大商业模式
+- `guide_sections` — 入门指南内容
 
-返回以指定货币为基准的汇率数据。
+所有表启用 RLS + 公开只读策略。
 
-**响应示例:**
+## 部署
 
-```json
-{
-  "base": "USD",
-  "rates": {
-    "CNY": 6.9157,
-    "EUR": 0.849,
-    "JPY": 155.09
-  },
-  "lastUpdated": "Sat, 21 Feb 2026 00:02:32 +0000"
-}
-```
+项目已部署到 Vercel，Supabase 作为数据库。
 
-## 设计决策
-
-| 决策 | 原因 |
-|------|------|
-| 始终以 USD 为基准获取汇率 | 只需缓存一份数据，任意货币对通过交叉汇率计算 |
-| 服务端代理 API | 避免 CORS 问题，可添加缓存层 |
-| 内存缓存 10 分钟 | 免费 API 每日更新，10 分钟足够新鲜且节省请求 |
-| Emoji 国旗 | 无需图片资源，现代浏览器全面支持 |
-| 原生 `<select>` | 移动端体验最佳，无障碍友好，零依赖 |
-| JPY/KRW 显示 0 位小数 | 符合实际货币使用习惯 |
+环境变量：
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
