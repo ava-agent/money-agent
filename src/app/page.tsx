@@ -1,5 +1,6 @@
 import HeroSection from "@/components/home/HeroSection";
 import FeatureCard from "@/components/home/FeatureCard";
+import FadeInOnScroll from "@/components/shared/FadeInOnScroll";
 
 const FEATURES = [
   {
@@ -23,7 +24,7 @@ const FEATURES = [
   {
     icon: "📖",
     title: "入门指南",
-    description: "从零开始的安装部署教程和 30 天行动路线图。",
+    description: "从零开始的安装部署教程、30 天行动路线图。",
     href: "/guide",
   },
   {
@@ -49,8 +50,10 @@ export default function Home() {
           探索完整内容
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {FEATURES.map((f) => (
-            <FeatureCard key={f.title} {...f} />
+          {FEATURES.map((f, index) => (
+            <FadeInOnScroll key={f.title} delay={index * 100}>
+              <FeatureCard {...f} />
+            </FadeInOnScroll>
           ))}
         </div>
       </section>

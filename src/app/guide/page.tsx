@@ -28,6 +28,7 @@ export default async function GuidePage() {
       <PageHeader
         title="入门指南"
         description="从零开始的完整教程，帮助你快速上手并开始赚钱"
+        icon="📖"
       />
 
       {/* 目录 */}
@@ -49,16 +50,33 @@ export default async function GuidePage() {
         </ul>
       </nav>
 
-      {/* 内容 */}
-      <div className="space-y-12">
-        {(sections ?? []).map((section) => (
-          <section key={section.id} id={section.slug}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span>{SECTION_ICONS[section.section_type] || "📄"}</span>
-              {section.title}
-            </h2>
-            <MarkdownRenderer content={section.content_markdown} />
-          </section>
+      {/* 内容 - Collapsible Accordions */}
+      <div className="space-y-4">
+        {(sections ?? []).map((section, index) => (
+          <details
+            key={section.id}
+            id={section.slug}
+            className="group border border-gray-200 rounded-xl overflow-hidden"
+            open={index === 0}
+          >
+            <summary className="flex items-center justify-between px-6 py-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors list-none">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <span>{SECTION_ICONS[section.section_type] || "📄"}</span>
+                {section.title}
+              </h2>
+              <svg
+                className="w-5 h-5 text-gray-400 transition-transform duration-300 group-open:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div className="px-6 py-6 border-t border-gray-100">
+              <MarkdownRenderer content={section.content_markdown} />
+            </div>
+          </details>
         ))}
       </div>
     </div>

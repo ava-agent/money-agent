@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Category, Method } from "@/lib/supabase/types";
 import CategoryFilter from "./CategoryFilter";
 import MethodCard from "./MethodCard";
@@ -12,6 +12,14 @@ interface MethodGridProps {
 
 export default function MethodGrid({ categories, methods }: MethodGridProps) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const categoryMap = useMemo(() => {
+    const map: Record<string, Category> = {};
+    categories.forEach((cat) => {
+      map[cat.id] = cat;
+    });
+    return map;
+  }, [categories]);
 
   const filtered = activeCategory
     ? methods.filter((m) => m.category_id === activeCategory)
@@ -25,8 +33,17 @@ export default function MethodGrid({ categories, methods }: MethodGridProps) {
         onSelect={setActiveCategory}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filtered.map((method) => (
-          <MethodCard key={method.id} method={method} />
+        {filtered.map((method, index) => (
+          <div
+            key={`${activeCategory}-${method.id}`}
+            className="animate-card-enter"
+            style={{ animationDelay: `${index * 30}ms` }}
+          >
+            <MethodCard
+              method={method}
+              categoryCode={categoryMap[method.category_id]?.code ?? ""}
+            />
+          </div>
         ))}
       </div>
       {filtered.length === 0 && (
