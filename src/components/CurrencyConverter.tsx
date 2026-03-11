@@ -83,24 +83,25 @@ export default function CurrencyConverter() {
   const unitRate = convert(1, fromCurrency, toCurrency);
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6">
-      <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+    <div className="w-full max-w-md mx-auto rounded-2xl p-6 shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
+      <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-center mb-6" style={{ color: "var(--foreground)" }}>
         💱 汇率换算器
       </h1>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-center">
+        <div className="mb-4 p-3 rounded-lg text-center" style={{ backgroundColor: "#fef2f2", border: "1px solid #fecaca" }}>
           <p className="text-red-600 text-sm">{error}</p>
           <button
             onClick={refetch}
-            className="mt-2 text-sm text-indigo-600 hover:text-indigo-800 underline cursor-pointer"
+            className="mt-2 text-sm underline cursor-pointer"
+            style={{ color: "var(--accent)" }}
           >
             重试
           </button>
         </div>
       )}
 
-      <div className="border border-gray-200 rounded-xl p-4 space-y-2">
+      <div className="rounded-xl p-4 space-y-2" style={{ border: "1px solid var(--border)" }}>
         <CurrencySelect value={fromCurrency} onChange={handleFromCurrencyChange} />
         <AmountInput
           value={fromAmount}
@@ -112,7 +113,7 @@ export default function CurrencyConverter() {
 
       <SwapButton onClick={handleSwap} />
 
-      <div className="border border-gray-200 rounded-xl p-4 space-y-2">
+      <div className="rounded-xl p-4 space-y-2" style={{ border: "1px solid var(--border)" }}>
         <CurrencySelect value={toCurrency} onChange={handleToCurrencyChange} />
         <AmountInput
           value={toAmount}

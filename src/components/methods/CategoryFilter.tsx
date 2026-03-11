@@ -18,11 +18,16 @@ export default function CategoryFilter({
     <div className="flex flex-wrap gap-2 mb-8">
       <button
         onClick={() => onSelect(null)}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
           activeCategory === null
-            ? "bg-indigo-600 text-white shadow-md"
-            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            ? "text-white shadow-md"
+            : "hover:opacity-80"
         }`}
+        style={
+          activeCategory === null
+            ? { backgroundColor: "var(--accent)" }
+            : { backgroundColor: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }
+        }
       >
         全部
       </button>
@@ -33,12 +38,16 @@ export default function CategoryFilter({
           <button
             key={cat.id}
             onClick={() => onSelect(cat.id)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
               isActive
                 ? "text-white shadow-md"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "hover:opacity-80"
             }`}
-            style={isActive ? { backgroundColor: colors.hex } : undefined}
+            style={
+              isActive
+                ? { backgroundColor: colors.hex }
+                : { backgroundColor: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }
+            }
           >
             {cat.icon} {cat.name}
           </button>

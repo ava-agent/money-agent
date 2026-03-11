@@ -23,23 +23,27 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 border-b" style={{ borderColor: "var(--border)", backgroundColor: "rgba(250, 247, 242, 0.85)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      {/* Gold accent line */}
+      <div className="h-[2px]" style={{ background: "linear-gradient(to right, var(--accent), var(--teal), var(--accent))" }} />
+
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-indigo-600">
-          MoneyAgent
+        <Link href="/" className="font-[family-name:var(--font-playfair)] text-xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
+          Money<span style={{ color: "var(--accent)" }}>Agent</span>
         </Link>
 
         {/* Desktop */}
-        <div className="hidden md:flex gap-1">
+        <div className="hidden md:flex gap-0.5">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isActive(link.href)
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  ? "text-[var(--foreground)]"
+                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
               }`}
+              style={isActive(link.href) ? { backgroundColor: "var(--accent-light)", color: "var(--accent-hover)" } : {}}
             >
               {link.label}
             </Link>
@@ -48,7 +52,8 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+          className="md:hidden p-2 rounded-lg cursor-pointer"
+          style={{ color: "var(--foreground)" }}
           onClick={() => setOpen(!open)}
           aria-label="菜单"
         >
@@ -64,17 +69,18 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-4 pb-3">
+        <div className="md:hidden px-4 pb-3" style={{ borderTop: "1px solid var(--border)", backgroundColor: "var(--background)" }}>
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className={`block py-2 px-3 rounded-lg text-sm font-medium ${
+              className={`block py-2.5 px-3 rounded-lg text-sm font-medium transition-colors ${
                 isActive(link.href)
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-600 hover:bg-gray-50"
+                  ? "text-[var(--accent-hover)]"
+                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
               }`}
+              style={isActive(link.href) ? { backgroundColor: "var(--accent-light)" } : {}}
             >
               {link.label}
             </Link>

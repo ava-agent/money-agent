@@ -11,17 +11,21 @@ const STATS = [
 
 export default function HeroStats() {
   return (
-    <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
-      {STATS.map((stat) => (
-        <div key={stat.label} className="group">
-          <div className="text-3xl md:text-4xl font-bold">
+    <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-0 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)", backgroundColor: "rgba(255,255,255,0.03)", backdropFilter: "blur(8px)" }}>
+      {STATS.map((stat, index) => (
+        <div
+          key={stat.label}
+          className="text-center py-6 px-4"
+          style={index < 3 ? { borderRight: "1px solid rgba(255,255,255,0.08)" } : {}}
+        >
+          <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold" style={{ color: "var(--accent)" }}>
             <AnimatedCounter
               target={stat.target}
               prefix={stat.prefix}
               suffix={stat.suffix}
             />
           </div>
-          <div className="text-sm text-indigo-200 mt-1">{stat.label}</div>
+          <div className="text-sm mt-2 tracking-wide" style={{ color: "rgba(255,255,255,0.45)" }}>{stat.label}</div>
         </div>
       ))}
     </div>

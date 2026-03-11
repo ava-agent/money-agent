@@ -38,9 +38,9 @@ export default async function MethodDetailPage({ params }: PageProps) {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
-      <Link href="/methods" className="text-sm text-indigo-600 hover:text-indigo-800 mb-6 inline-flex items-center gap-1">
+      <Link href="/methods" className="text-sm mb-6 inline-flex items-center gap-1 transition-colors hover:opacity-80" style={{ color: "var(--accent)" }}>
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7 7-7-7" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
         返回列表
       </Link>
@@ -51,8 +51,8 @@ export default async function MethodDetailPage({ params }: PageProps) {
             <div className="flex items-center gap-4 mb-4">
               <span className="text-5xl">{method.icon}</span>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">{method.title}</h1>
-                <p className="text-gray-600 text-lg">{method.description}</p>
+                <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>{method.title}</h1>
+                <p className="text-lg" style={{ color: "var(--muted)" }}>{method.description}</p>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-3">
@@ -67,35 +67,35 @@ export default async function MethodDetailPage({ params }: PageProps) {
               )}
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-100">
+          <div className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border)" }}>
             <MarkdownRenderer content={method.detail_markdown} />
           </div>
         </div>
 
         <aside className="lg:sticky lg:top-20 lg:self-start">
-          <div className={`rounded-xl border-2 ${colors.border} overflow-hidden`}>
+          <div className={`rounded-xl border-2 ${colors.border} overflow-hidden shadow-warm`}>
             <div className={`${colors.bg} px-5 py-4`}>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{method.icon}</span>
                 <span className={`text-sm font-semibold ${colors.text}`}>{method.categories?.icon} {method.categories?.name}</span>
               </div>
             </div>
-            <div className="p-5 space-y-4 bg-white">
+            <div className="p-5 space-y-4" style={{ backgroundColor: "var(--card-bg)" }}>
               <div>
-                <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">预估收入</div>
-                <div className={`text-lg font-bold ${colors.text}`}>{method.income}</div>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>预估收入</div>
+                <div className={`font-[family-name:var(--font-playfair)] text-lg font-bold ${colors.text}`}>{method.income}</div>
               </div>
               <div>
-                <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">难度等级</div>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>难度等级</div>
                 <DifficultyDots level={method.difficulty} />
               </div>
               <div>
-                <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">风险等级</div>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>风险等级</div>
                 <RiskBar level={method.risk_level} />
               </div>
               <div>
-                <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">方法编号</div>
-                <div className="text-sm font-mono text-gray-700">#{method.number}</div>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>方法编号</div>
+                <div className="text-sm font-mono" style={{ color: "var(--foreground)" }}>#{method.number}</div>
               </div>
             </div>
           </div>

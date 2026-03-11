@@ -45,10 +45,16 @@ export default function Home() {
   return (
     <div>
       <HeroSection />
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">
-          探索完整内容
-        </h2>
+      <section className="max-w-6xl mx-auto px-4 py-20">
+        <div className="text-center mb-14">
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
+            探索完整内容
+          </h2>
+          <p className="mt-3 text-base" style={{ color: "var(--muted)" }}>
+            从方法论到实操工具，一站式掌握 AI 赚钱之道
+          </p>
+          <div className="accent-line mx-auto mt-5" />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {FEATURES.map((f, index) => (
             <FadeInOnScroll key={f.title} delay={index * 100}>

@@ -17,18 +17,18 @@ export default function ToolsPage() {
       />
 
       <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <h2 className="font-[family-name:var(--font-playfair)] text-xl font-semibold mb-4 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
           <span>💰</span>
           汇率换算器
         </h2>
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm mb-6" style={{ color: "var(--muted)" }}>
           支持 18 种主要货币的实时汇率换算，帮助你计算跨境收入。
         </p>
         <CurrencyConverter />
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <h2 className="font-[family-name:var(--font-playfair)] text-xl font-semibold mb-4 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
           <span>🔧</span>
           更多工具即将推出
         </h2>
@@ -39,12 +39,13 @@ export default function ToolsPage() {
           ].map((tool) => (
             <div
               key={tool.title}
-              className="p-5 border border-dashed border-gray-300 rounded-xl text-center text-gray-400 hover:border-indigo-300 hover:text-gray-500 transition-colors"
+              className="p-5 border border-dashed rounded-xl text-center transition-all duration-200 hover:-translate-y-0.5"
+              style={{ borderColor: "var(--border)", color: "var(--muted)" }}
             >
               <div className="text-3xl mb-2">{tool.icon}</div>
-              <div className="font-medium">{tool.title}</div>
+              <div className="font-medium" style={{ color: "var(--foreground)" }}>{tool.title}</div>
               <div className="text-xs mt-1">{tool.desc}</div>
-              <div className="text-xs mt-3 inline-block px-2 py-0.5 bg-indigo-50 text-indigo-400 rounded-full">
+              <div className="text-xs mt-3 inline-block px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--accent-light)", color: "var(--accent)" }}>
                 Coming Soon
               </div>
             </div>

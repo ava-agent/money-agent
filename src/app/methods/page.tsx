@@ -29,27 +29,27 @@ export default async function MethodsPage() {
 
       {/* Stats summary bar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-indigo-50 rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-indigo-600">{methods?.length ?? 0}</div>
-          <div className="text-xs text-gray-500 mt-1">总方法数</div>
+        <div className="rounded-xl p-4 text-center shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
+          <div className="font-[family-name:var(--font-playfair)] text-2xl font-bold" style={{ color: "var(--accent)" }}>{methods?.length ?? 0}</div>
+          <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>总方法数</div>
         </div>
-        <div className="bg-green-50 rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-green-600">
+        <div className="rounded-xl p-4 text-center shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
+          <div className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-emerald-600">
             {methods?.filter((m) => m.difficulty === "beginner").length ?? 0}
           </div>
-          <div className="text-xs text-gray-500 mt-1">入门级</div>
+          <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>入门级</div>
         </div>
-        <div className="bg-yellow-50 rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-yellow-600">
+        <div className="rounded-xl p-4 text-center shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
+          <div className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-amber-600">
             {methods?.filter((m) => m.difficulty === "intermediate").length ?? 0}
           </div>
-          <div className="text-xs text-gray-500 mt-1">中级</div>
+          <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>中级</div>
         </div>
-        <div className="bg-red-50 rounded-xl p-4 text-center">
-          <div className="text-2xl font-bold text-red-600">
+        <div className="rounded-xl p-4 text-center shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
+          <div className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-rose-600">
             {methods?.filter((m) => m.difficulty === "advanced").length ?? 0}
           </div>
-          <div className="text-xs text-gray-500 mt-1">高级</div>
+          <div className="text-xs mt-1" style={{ color: "var(--muted)" }}>高级</div>
         </div>
       </div>
 

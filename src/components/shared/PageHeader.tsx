@@ -6,15 +6,19 @@ interface PageHeaderProps {
 
 export default function PageHeader({ title, description, icon }: PageHeaderProps) {
   return (
-    <div className="mb-10">
-      <div className="flex items-center gap-3 mb-2">
+    <div className="mb-12">
+      <div className="flex items-center gap-3 mb-3">
         {icon && <span className="text-4xl">{icon}</span>}
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">{title}</h1>
+        <h1 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
+          {title}
+        </h1>
       </div>
       {description && (
-        <p className="mt-2 text-lg text-gray-500 max-w-2xl">{description}</p>
+        <p className="mt-2 text-lg leading-relaxed max-w-2xl" style={{ color: "var(--muted)" }}>
+          {description}
+        </p>
       )}
-      <div className="mt-4 h-1 w-20 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" />
+      <div className="accent-line mt-5" />
     </div>
   );
 }
