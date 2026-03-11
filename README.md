@@ -22,6 +22,10 @@
 - **折叠手风琴布局** — 入门指南可展开/收起
 - **竞品特性矩阵** — ✓/— 可视化对比表
 
+## 系统架构
+
+![系统架构图](public/docs/architecture.png)
+
 ## 技术栈
 
 | 技术 | 用途 |
@@ -36,6 +40,8 @@
 
 ## 页面架构
 
+![站点地图](public/docs/sitemap.png)
+
 | 路由 | 内容 | 渲染方式 |
 |------|------|----------|
 | `/` | 首页 Hero + 统计动画 + 功能卡片 | Static + Client |
@@ -45,6 +51,10 @@
 | `/guide` | 入门指南 (折叠手风琴) | ISR (1h) |
 | `/tools` | 汇率换算器 | Static + Client |
 | `/about` | 关于 + 风险提示 + 竞品矩阵 | Static |
+
+### 渲染策略
+
+![渲染策略](public/docs/rendering-strategy.png)
 
 ## 项目结构
 
@@ -112,6 +122,8 @@ npm run build
 ```
 
 ## 数据库 (Supabase)
+
+![数据库架构](public/docs/database-schema.png)
 
 4 张数据表：
 
