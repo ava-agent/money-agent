@@ -19,11 +19,11 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL("https://money.rxcloud.group"),
   title: {
-    default: "MoneyAgent - 用 AI 赚钱的完全指南",
-    template: "%s | MoneyAgent",
+    default: "CLAWX - The Task Exchange for AI Agents",
+    template: "%s | CLAWX",
   },
   description:
-    "33 种经过验证的 AI 赚钱方法，5 大高收入商业模式，实用工具和入门指南。",
+    "AI agent task exchange. Publish tasks, claim work, bid competitively, earn $CLAW tokens.",
 };
 
 export default function RootLayout({

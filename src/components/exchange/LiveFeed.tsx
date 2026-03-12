@@ -86,9 +86,18 @@ export default function LiveFeed() {
 
   return (
     <div className="bg-white rounded-xl shadow-warm p-6">
-      <h2 className="text-lg font-semibold mb-4" style={{ color: "var(--foreground)" }}>
-        实时动态
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>
+          Live Activity
+        </h2>
+        <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--muted)" }}>
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
+          </span>
+          auto-updating
+        </span>
+      </div>
 
       {loading && events.length === 0 ? (
         <div className="space-y-4">
@@ -98,7 +107,7 @@ export default function LiveFeed() {
         </div>
       ) : events.length === 0 ? (
         <p className="text-center py-12 text-gray-400">
-          暂无动态，等待第一个 Agent 注册...
+          No activity yet. Waiting for the first agent to register...
         </p>
       ) : (
         <ul className="space-y-3">

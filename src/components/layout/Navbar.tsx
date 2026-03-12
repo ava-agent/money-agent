@@ -5,13 +5,11 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const NAV_LINKS = [
-  { href: "/", label: "交易大厅" },
-  { href: "/tasks", label: "任务看板" },
-  { href: "/templates", label: "任务模板" },
-  { href: "/models", label: "商业模式" },
-  { href: "/tools", label: "工具" },
-  { href: "/guide", label: "API 指南" },
-  { href: "/about", label: "关于" },
+  { href: "/", label: "Exchange" },
+  { href: "/tasks", label: "Tasks" },
+  { href: "/templates", label: "Templates" },
+  { href: "/guide", label: "API Guide" },
+  { href: "/about", label: "About" },
 ];
 
 export default function Navbar() {
@@ -24,13 +22,21 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b" style={{ borderColor: "var(--border)", backgroundColor: "rgba(250, 247, 242, 0.85)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
-      {/* Gold accent line */}
-      <div className="h-[2px]" style={{ background: "linear-gradient(to right, var(--accent), var(--teal), var(--accent))" }} />
+    <nav className="sticky top-0 z-50 border-b" style={{ borderColor: "rgba(255,255,255,0.06)", backgroundColor: "rgba(15, 15, 19, 0.92)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      {/* Accent line */}
+      <div className="h-[2px]" style={{ background: "linear-gradient(to right, #ff6b35, #00d4aa, #ff6b35)" }} />
+
+      {/* Developer CTA banner */}
+      <div className="text-center py-1.5 text-xs" style={{ background: "rgba(255,107,53,0.08)", borderBottom: "1px solid rgba(255,107,53,0.1)" }}>
+        <Link href="/guide" className="hover:underline" style={{ color: "#ff6b35" }}>
+          Build apps for AI agents — Read our API Guide &rarr;
+        </Link>
+      </div>
 
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="font-[family-name:var(--font-playfair)] text-xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
-          Money<span style={{ color: "var(--accent)" }}>Agent</span>
+        <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight" style={{ color: "#ffffff" }}>
+          <span className="text-lg">🦀</span>
+          <span className="font-mono">CLAW<span style={{ color: "#ff6b35" }}>X</span></span>
         </Link>
 
         {/* Desktop */}
@@ -41,10 +47,10 @@ export default function Navbar() {
               href={link.href}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isActive(link.href)
-                  ? "text-[var(--foreground)]"
-                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                  ? ""
+                  : "hover:text-white"
               }`}
-              style={isActive(link.href) ? { backgroundColor: "var(--accent-light)", color: "var(--accent-hover)" } : {}}
+              style={isActive(link.href) ? { backgroundColor: "rgba(255,107,53,0.12)", color: "#ff6b35" } : { color: "rgba(255,255,255,0.5)" }}
             >
               {link.label}
             </Link>
@@ -54,7 +60,7 @@ export default function Navbar() {
         {/* Mobile hamburger */}
         <button
           className="md:hidden p-2 rounded-lg cursor-pointer"
-          style={{ color: "var(--foreground)" }}
+          style={{ color: "rgba(255,255,255,0.7)" }}
           onClick={() => setOpen(!open)}
           aria-label="菜单"
         >
@@ -70,18 +76,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden px-4 pb-3" style={{ borderTop: "1px solid var(--border)", backgroundColor: "var(--background)" }}>
+        <div className="md:hidden px-4 pb-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", backgroundColor: "#0f0f13" }}>
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className={`block py-2.5 px-3 rounded-lg text-sm font-medium transition-colors ${
-                isActive(link.href)
-                  ? "text-[var(--accent-hover)]"
-                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
-              }`}
-              style={isActive(link.href) ? { backgroundColor: "var(--accent-light)" } : {}}
+              className="block py-2.5 px-3 rounded-lg text-sm font-medium transition-colors"
+              style={isActive(link.href) ? { backgroundColor: "rgba(255,107,53,0.12)", color: "#ff6b35" } : { color: "rgba(255,255,255,0.5)" }}
             >
               {link.label}
             </Link>

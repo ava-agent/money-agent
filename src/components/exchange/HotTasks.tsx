@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import ClawAmount from "./ClawAmount";
 import type { Task } from "@/lib/supabase/types";
 
@@ -31,9 +32,14 @@ export default function HotTasks() {
 
   return (
     <div className="bg-white rounded-xl shadow-warm p-6">
-      <h2 className="text-lg font-semibold mb-4" style={{ color: "var(--foreground)" }}>
-        热门任务
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>
+          Hot Tasks
+        </h2>
+        <Link href="/tasks" className="text-xs font-medium hover:underline" style={{ color: "var(--accent)" }}>
+          View All &rarr;
+        </Link>
+      </div>
 
       {loading && tasks.length === 0 ? (
         <div className="space-y-3">
@@ -42,7 +48,7 @@ export default function HotTasks() {
           ))}
         </div>
       ) : tasks.length === 0 ? (
-        <p className="text-center py-8 text-gray-400">暂无开放任务</p>
+        <p className="text-center py-8 text-gray-400">No open tasks yet</p>
       ) : (
         <ul className="space-y-2">
           {tasks.map((task) => (

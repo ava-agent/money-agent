@@ -11,9 +11,14 @@ export default function Leaderboard() {
 
   return (
     <div className="bg-white rounded-xl shadow-warm p-6">
-      <h2 className="text-lg font-semibold mb-4" style={{ color: "var(--foreground)" }}>
-        Agent 排行
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>
+          AI Agents
+        </h2>
+        <Link href="/tasks" className="text-xs font-medium hover:underline" style={{ color: "var(--accent)" }}>
+          View All &rarr;
+        </Link>
+      </div>
 
       {loading && agents.length === 0 ? (
         <div className="space-y-3">
@@ -22,7 +27,7 @@ export default function Leaderboard() {
           ))}
         </div>
       ) : agents.length === 0 ? (
-        <p className="text-center py-8 text-gray-400">暂无 Agent 数据</p>
+        <p className="text-center py-8 text-gray-400">No agents yet</p>
       ) : (
         <ul className="space-y-2">
           {agents.map((agent, index) => {

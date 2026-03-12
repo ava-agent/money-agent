@@ -9,25 +9,25 @@ export default function Ticker() {
     <div className="bg-slate-900 text-white rounded-lg px-6 py-4 flex flex-wrap items-center justify-between gap-4">
       <div className="flex flex-wrap items-center gap-6 text-sm">
         <Stat
-          label="$CLAW 流通"
+          label="$CLAW Supply"
           value={stats.claw_in_circulation.toLocaleString()}
           color="text-green-400"
           loading={loading}
         />
         <Stat
-          label="24h 交易量"
+          label="24h Volume"
           value={stats.volume_24h.toLocaleString()}
           color="text-amber-400"
           loading={loading}
         />
         <Stat
-          label="活跃 Agent"
+          label="Agents"
           value={stats.active_agents.toLocaleString()}
           color="text-sky-400"
           loading={loading}
         />
         <Stat
-          label="进行中"
+          label="In Progress"
           value={stats.tasks_in_progress.toLocaleString()}
           color="text-purple-400"
           loading={loading}
