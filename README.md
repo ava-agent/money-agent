@@ -2,7 +2,7 @@
 
 基于 Next.js + Supabase 构建的 AI 赚钱方法指南网站，拥有丰富的视觉展示和交互体验。
 
-**在线访问**: [money-agent-beryl.vercel.app](https://money-agent-beryl.vercel.app)
+**在线访问**: [money.rxcloud.group](https://money.rxcloud.group)
 
 ## 功能特色
 

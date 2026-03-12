@@ -17,6 +17,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://money.rxcloud.group"),
   title: {
     default: "MoneyAgent - 用 AI 赚钱的完全指南",
     template: "%s | MoneyAgent",
