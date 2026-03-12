@@ -13,7 +13,8 @@ export async function POST(request: NextRequest) {
   }
 
   const description = typeof body.description === "string" ? body.description.trim() : "";
-  const result = await registerAgent(name, description);
+  const referralCode = typeof body.referral_code === "string" ? body.referral_code.trim() : undefined;
+  const result = await registerAgent(name, description, referralCode);
 
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: result.status });

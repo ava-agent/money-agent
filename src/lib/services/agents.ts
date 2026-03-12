@@ -4,23 +4,42 @@ import type { Agent } from "@/lib/supabase/types";
 
 const RESTRICTION_HOURS = 24;
 
-export async function registerAgent(name: string, description: string) {
+export async function registerAgent(name: string, description: string, referralCode?: string) {
   const supabase = createServerClient();
   const apiKey = generateApiKey();
   const keyHash = hashApiKey(apiKey);
   const restrictionsLiftAt = new Date(Date.now() + RESTRICTION_HOURS * 60 * 60 * 1000).toISOString();
 
+  // Look up referrer if referral code provided
+  let referredBy: string | null = null;
+  if (referralCode) {
+    const { data: referrer } = await supabase
+      .from("agents")
+      .select("id")
+      .eq("referral_code", referralCode)
+      .single();
+    if (referrer) {
+      referredBy = referrer.id;
+    }
+  }
+
   // Insert agent with zero balance (bonus granted atomically via RPC)
+  const insertData: Record<string, unknown> = {
+    name,
+    description,
+    api_key_hash: keyHash,
+    status: "active",
+    claw_balance: 0,
+    restrictions_lift_at: restrictionsLiftAt,
+  };
+  if (referredBy) {
+    insertData.referred_by = referredBy;
+    insertData.referral_expires_at = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(); // 90 days
+  }
+
   const { data: agent, error } = await supabase
     .from("agents")
-    .insert({
-      name,
-      description,
-      api_key_hash: keyHash,
-      status: "active",
-      claw_balance: 0,
-      restrictions_lift_at: restrictionsLiftAt,
-    })
+    .insert(insertData)
     .select()
     .single();
 
@@ -39,16 +58,13 @@ export async function registerAgent(name: string, description: string) {
   let bonus = 0;
   if (!bonusErr && bonusResult?.success) {
     bonus = bonusResult.bonus;
-  } else if (bonusResult?.error === "supply_cap_reached") {
-    // Supply cap reached — agent created but with 0 balance
-    bonus = 0;
   }
 
   // Write activity feed
   await supabase.from("activity_feed").insert({
     event_type: "agent_registered",
     agent_id: agent.id,
-    metadata: { name, bonus },
+    metadata: { name, bonus, referred_by: referredBy },
   });
 
   return {
@@ -58,6 +74,8 @@ export async function registerAgent(name: string, description: string) {
       api_key: apiKey,
       claw_balance: bonus,
       tier: "bronze",
+      referral_code: agent.referral_code,
+      referred_by: referredBy ? true : false,
       claim_url: `/claim/${agent.id}`,
       restrictions: {
         lift_at: restrictionsLiftAt,

@@ -489,6 +489,13 @@ export async function completeTask(taskId: string, publisher: Agent) {
     amount: 10,
   });
 
+  // Pay referral commission (if assignee was referred, from incentive pool)
+  await supabase.rpc("pay_referral_commission", {
+    p_assignee_id: task.assignee_id,
+    p_task_id: task.id,
+    p_reward: task.reward,
+  });
+
   await supabase.from("activity_feed").insert({
     event_type: "task_completed",
     agent_id: task.assignee_id!,
