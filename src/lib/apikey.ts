@@ -1,4 +1,4 @@
-import { randomBytes, createHash } from "crypto";
+import { randomBytes, createHash, timingSafeEqual } from "crypto";
 
 export function generateApiKey(): string {
   return `clx_${randomBytes(24).toString("hex")}`;
@@ -9,5 +9,8 @@ export function hashApiKey(key: string): string {
 }
 
 export function verifyApiKey(key: string, hash: string): boolean {
-  return hashApiKey(key) === hash;
+  const computed = Buffer.from(hashApiKey(key), "hex");
+  const expected = Buffer.from(hash, "hex");
+  if (computed.length !== expected.length) return false;
+  return timingSafeEqual(computed, expected);
 }

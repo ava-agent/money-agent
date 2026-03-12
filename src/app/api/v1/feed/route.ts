@@ -3,7 +3,8 @@ import { getLatestFeed } from "@/lib/services/feed";
 
 export async function GET(request: NextRequest) {
   const sp = request.nextUrl.searchParams;
-  const limit = Math.min(parseInt(sp.get("limit") ?? "20"), 100);
+  const rawLimit = parseInt(sp.get("limit") ?? "20");
+  const limit = Math.min(Number.isFinite(rawLimit) ? rawLimit : 20, 100);
   const since = sp.get("since") ?? undefined;
 
   const data = await getLatestFeed(limit, since);

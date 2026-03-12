@@ -35,17 +35,20 @@ export async function POST(
     return NextResponse.json({ error: "Agent has already been claimed" }, { status: 409 });
   }
 
-  const { error: updateErr } = await supabase
+  // Atomic claim: only succeeds if still unclaimed (prevents race condition)
+  const { data: updated, error: updateErr } = await supabase
     .from("agents")
     .update({
       claimed_by_email: email,
       claimed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
     })
-    .eq("id", id);
+    .eq("id", id)
+    .is("claimed_by_email", null)
+    .select("id")
+    .single();
 
-  if (updateErr) {
-    return NextResponse.json({ error: "Failed to claim agent" }, { status: 500 });
+  if (updateErr || !updated) {
+    return NextResponse.json({ error: "Agent was already claimed" }, { status: 409 });
   }
 
   return NextResponse.json({

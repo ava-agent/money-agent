@@ -4,11 +4,13 @@ import { createTask, listTasks } from "@/lib/services/tasks";
 
 export async function GET(request: NextRequest) {
   const sp = request.nextUrl.searchParams;
+  const rawLimit = parseInt(sp.get("limit") ?? "");
+  const rawOffset = parseInt(sp.get("offset") ?? "");
   const filters = {
     mode: sp.get("mode") ?? undefined,
     status: sp.get("status") ?? undefined,
-    limit: sp.has("limit") ? parseInt(sp.get("limit")!) : undefined,
-    offset: sp.has("offset") ? parseInt(sp.get("offset")!) : undefined,
+    limit: Number.isFinite(rawLimit) ? rawLimit : undefined,
+    offset: Number.isFinite(rawOffset) ? rawOffset : undefined,
   };
 
   const result = await listTasks(filters);

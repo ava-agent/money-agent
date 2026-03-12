@@ -1,10 +1,27 @@
 const windows = new Map<string, { count: number; resetAt: number }>();
 
+// Periodic cleanup of expired entries to prevent memory leaks
+let lastCleanup = Date.now();
+const CLEANUP_INTERVAL = 60_000; // 1 minute
+
+function cleanupExpired() {
+  const now = Date.now();
+  if (now - lastCleanup < CLEANUP_INTERVAL) return;
+  lastCleanup = now;
+  for (const [key, entry] of windows) {
+    if (now > entry.resetAt) {
+      windows.delete(key);
+    }
+  }
+}
+
 export function checkRateLimit(
   key: string,
   maxRequests: number,
   windowMs: number
 ): { allowed: boolean; remaining: number; resetAt: number } {
+  cleanupExpired();
+
   const now = Date.now();
   const entry = windows.get(key);
 
