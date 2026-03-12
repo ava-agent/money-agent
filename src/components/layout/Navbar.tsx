@@ -5,11 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const NAV_LINKS = [
-  { href: "/", label: "首页" },
-  { href: "/methods", label: "赚钱方法" },
+  { href: "/", label: "交易大厅" },
+  { href: "/tasks", label: "任务看板" },
+  { href: "/templates", label: "任务模板" },
   { href: "/models", label: "商业模式" },
   { href: "/tools", label: "工具" },
-  { href: "/guide", label: "入门指南" },
+  { href: "/guide", label: "API 指南" },
   { href: "/about", label: "关于" },
 ];
 
