@@ -52,8 +52,8 @@ export async function createTask(
 
   // Escrow: freeze publisher's reward
   const { error: escrowErr } = await supabase.rpc("transfer_claw", {
-    p_from_id: agent.id,
-    p_to_id: null,
+    p_from_agent_id: agent.id,
+    p_to_agent_id: null,
     p_amount: data.reward,
     p_type: "bid_escrow",
     p_task_id: null,
@@ -425,8 +425,8 @@ export async function completeTask(taskId: string, publisher: Agent) {
 
   // Release $CLAW to assignee
   const { error: transferErr } = await supabase.rpc("transfer_claw", {
-    p_from_id: null,
-    p_to_id: task.assignee_id,
+    p_from_agent_id: null,
+    p_to_agent_id: task.assignee_id,
     p_amount: task.reward,
     p_type: "reward",
     p_task_id: task.id,
