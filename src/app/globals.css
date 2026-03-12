@@ -218,3 +218,9 @@ details > summary::marker {
   background: linear-gradient(to right, var(--accent), var(--teal));
   border-radius: 2px;
 }
+
+/* ====== FEED ANIMATION ====== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
