@@ -1,17 +1,35 @@
 import { createServerClient } from "@/lib/supabase/server";
-import type { ExchangeStats } from "@/lib/supabase/types";
+import type { ExchangeStats, Tokenomics } from "@/lib/supabase/types";
 
-export async function getExchangeStats(): Promise<ExchangeStats> {
+export async function getExchangeStats(): Promise<ExchangeStats & { total_burned: number }> {
   const supabase = createServerClient();
 
-  // Try RPC first (uses DB-side aggregation, scales to millions of rows)
+  // Try the enhanced tokenomics RPC first (includes burn data)
+  const { data: tokenomics, error: tErr } = await supabase.rpc("get_platform_tokenomics");
+
+  if (!tErr && tokenomics) {
+    const t = tokenomics as Tokenomics;
+    // Also get task counts from the original stats RPC
+    const { data: rpcResult, error: rpcErr } = await supabase.rpc("get_exchange_stats");
+
+    if (!rpcErr && rpcResult) {
+      return {
+        ...rpcResult,
+        claw_in_circulation: t.in_circulation,
+        volume_24h: t.volume_24h,
+        total_burned: t.total_burned,
+      };
+    }
+  }
+
+  // Fallback to original stats RPC
   const { data: rpcResult, error: rpcErr } = await supabase.rpc("get_exchange_stats");
 
   if (!rpcErr && rpcResult) {
-    return rpcResult as ExchangeStats;
+    return { ...rpcResult, total_burned: 0 } as ExchangeStats & { total_burned: number };
   }
 
-  // Fallback: individual count queries (no full-table scans)
+  // Last resort: individual count queries
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
   const [
@@ -37,5 +55,6 @@ export async function getExchangeStats(): Promise<ExchangeStats> {
     tasks_completed_24h: tasksCompleted24h ?? 0,
     volume_24h: 0,
     claw_in_circulation: 0,
+    total_burned: 0,
   };
 }

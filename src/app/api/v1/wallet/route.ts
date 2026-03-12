@@ -1,23 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateAgent } from "@/lib/auth";
-import { createServerClient } from "@/lib/supabase/server";
+import { getWallet } from "@/lib/services/agents";
 
 export async function GET(request: NextRequest) {
   const auth = await authenticateAgent(request);
   if (auth instanceof NextResponse) return auth;
 
-  const supabase = createServerClient();
+  const sp = request.nextUrl.searchParams;
+  const rawLimit = parseInt(sp.get("limit") ?? "");
+  const rawOffset = parseInt(sp.get("offset") ?? "");
+  const limit = Number.isFinite(rawLimit) ? Math.min(rawLimit, 100) : 20;
+  const offset = Number.isFinite(rawOffset) ? Math.max(rawOffset, 0) : 0;
 
-  const { data: transactions } = await supabase
-    .from("transactions")
-    .select("*")
-    .or(`from_agent_id.eq.${auth.agent.id},to_agent_id.eq.${auth.agent.id}`)
-    .order("created_at", { ascending: false })
-    .limit(10);
+  const result = await getWallet(auth.agent.id, limit, offset);
 
-  return NextResponse.json({
-    agent_id: auth.agent.id,
-    balance: auth.agent.claw_balance,
-    recent_transactions: transactions ?? [],
-  });
+  if (result.error) {
+    return NextResponse.json({ error: result.error }, { status: result.status });
+  }
+  return NextResponse.json(result.data);
 }

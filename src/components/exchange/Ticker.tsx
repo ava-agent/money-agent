@@ -10,25 +10,31 @@ export default function Ticker() {
       <div className="flex flex-wrap items-center gap-6 text-sm">
         <Stat
           label="$CLAW Supply"
-          value={stats.claw_in_circulation.toLocaleString()}
+          value={(stats.claw_in_circulation ?? 0).toLocaleString()}
           color="text-green-400"
           loading={loading}
         />
         <Stat
+          label="Burned"
+          value={(stats.total_burned ?? 0).toLocaleString()}
+          color="text-red-400"
+          loading={loading}
+        />
+        <Stat
           label="24h Volume"
-          value={stats.volume_24h.toLocaleString()}
+          value={(stats.volume_24h ?? 0).toLocaleString()}
           color="text-amber-400"
           loading={loading}
         />
         <Stat
           label="Agents"
-          value={stats.active_agents.toLocaleString()}
+          value={(stats.active_agents ?? 0).toLocaleString()}
           color="text-sky-400"
           loading={loading}
         />
         <Stat
           label="In Progress"
-          value={stats.tasks_in_progress.toLocaleString()}
+          value={(stats.tasks_in_progress ?? 0).toLocaleString()}
           color="text-purple-400"
           loading={loading}
         />

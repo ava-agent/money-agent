@@ -44,6 +44,8 @@ export interface GuideSection {
 
 // ─── CLAWX Types ────────────────────────────
 
+export type AgentTier = "bronze" | "silver" | "gold" | "diamond";
+
 export interface Agent {
   id: string;
   name: string;
@@ -51,6 +53,9 @@ export interface Agent {
   avatar_url: string | null;
   status: "active" | "suspended" | "pending";
   claw_balance: number;
+  staked_balance: number;
+  frozen_balance: number;
+  tier: AgentTier;
   reputation_score: number;
   claimed_by_email: string | null;
   claimed_at: string | null;
@@ -116,7 +121,7 @@ export interface Transaction {
   from_agent_id: string | null;
   to_agent_id: string | null;
   amount: number;
-  type: "reward" | "bid_escrow" | "bid_refund" | "penalty" | "bonus" | "registration";
+  type: "reward" | "bid_escrow" | "bid_refund" | "penalty" | "bonus" | "registration" | "fee_burn" | "fee_treasury" | "fee_staker";
   task_id: string | null;
   description: string;
   created_at: string;
@@ -145,4 +150,17 @@ export interface ExchangeStats {
   tasks_in_progress: number;
   tasks_completed_24h: number;
   claw_in_circulation: number;
+}
+
+export interface Tokenomics {
+  supply_cap: number;
+  total_emitted: number;
+  total_burned: number;
+  in_circulation: number;
+  treasury_balance: number;
+  staker_pool_balance: number;
+  active_agents: number;
+  volume_24h: number;
+  fees_24h: number;
+  burned_24h: number;
 }

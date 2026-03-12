@@ -50,25 +50,6 @@ export async function createTask(
   }
 
   const supabase = createServerClient();
-
-  // Check balance >= reward (fresh from DB)
-  const { data: freshAgent, error: balErr } = await supabase
-    .from("agents")
-    .select("claw_balance")
-    .eq("id", agent.id)
-    .single();
-
-  if (balErr || !freshAgent) {
-    return { error: "Could not verify balance", status: 500 as const };
-  }
-
-  if (freshAgent.claw_balance < data.reward) {
-    return {
-      error: `Insufficient balance. Required: ${data.reward}, available: ${freshAgent.claw_balance}`,
-      status: 400 as const,
-    };
-  }
-
   const mode: TaskMode = data.mode ?? "open";
   const initialStatus: TaskStatus = mode === "bidding" ? "bidding" : "open";
 
@@ -94,20 +75,20 @@ export async function createTask(
     return { error: "Failed to create task", status: 500 as const };
   }
 
-  // Escrow: freeze publisher's reward (now with task_id)
-  const { error: escrowErr } = await supabase.rpc("transfer_claw", {
-    p_from_agent_id: agent.id,
-    p_to_agent_id: null,
-    p_amount: data.reward,
-    p_type: "bid_escrow",
+  // Escrow with fee: atomic balance check + escrow + fee split (burn/treasury/staker)
+  const { data: escrowResult, error: escrowErr } = await supabase.rpc("escrow_with_fee", {
+    p_agent_id: agent.id,
+    p_reward: data.reward,
     p_task_id: task.id,
-    p_description: `Escrow for task: ${data.title}`,
   });
 
-  if (escrowErr) {
+  if (escrowErr || !escrowResult?.success) {
     // Rollback: delete the task since escrow failed
     await supabase.from("tasks").delete().eq("id", task.id);
-    return { error: "Escrow transfer failed (insufficient balance)", status: 400 as const };
+    const errMsg = escrowResult?.error === "insufficient_balance"
+      ? `Insufficient balance. Required: ${escrowResult.required} (reward ${escrowResult.reward} + fee ${escrowResult.fee}), available: ${escrowResult.available}`
+      : "Escrow transfer failed";
+    return { error: errMsg, status: 400 as const };
   }
 
   // Activity feed
@@ -115,10 +96,25 @@ export async function createTask(
     event_type: "task_created",
     agent_id: agent.id,
     task_id: task.id,
-    metadata: { title: task.title, reward: task.reward, mode },
+    metadata: {
+      title: task.title,
+      reward: task.reward,
+      mode,
+      fee: escrowResult.fee,
+      fee_rate: escrowResult.fee_rate,
+      burn: escrowResult.burn,
+    },
   });
 
-  return { data: task as Task, status: 201 as const };
+  return {
+    data: {
+      ...task,
+      fee: escrowResult.fee,
+      fee_rate: escrowResult.fee_rate,
+      total_deducted: escrowResult.total_deducted,
+    } as Task & { fee: number; fee_rate: number; total_deducted: number },
+    status: 201 as const,
+  };
 }
 
 // ─── listTasks ──────────────────────────────────────
@@ -466,18 +462,14 @@ export async function completeTask(taskId: string, publisher: Agent) {
     return { error: "Task already completed or status changed", status: 409 as const };
   }
 
-  // Release $CLAW from escrow to assignee
-  // Note: escrow was deducted from publisher (from→null), now we credit assignee (null→assignee)
-  const { error: transferErr } = await supabase.rpc("transfer_claw", {
-    p_from_agent_id: null,
-    p_to_agent_id: task.assignee_id,
-    p_amount: task.reward,
-    p_type: "reward",
+  // Release escrow: credits assignee + reduces publisher frozen_balance
+  const { data: releaseResult, error: releaseErr } = await supabase.rpc("release_escrow", {
     p_task_id: task.id,
-    p_description: `Reward for completing task: ${task.title}`,
+    p_assignee_id: task.assignee_id,
+    p_reward: task.reward,
   });
 
-  if (transferErr) {
+  if (releaseErr || !releaseResult?.success) {
     // Rollback task status
     await supabase.from("tasks").update({ status: "submitted" }).eq("id", taskId);
     return { error: "Reward transfer failed", status: 500 as const };
@@ -546,6 +538,58 @@ export async function rejectTask(
     agent_id: task.assignee_id!,
     task_id: taskId,
     metadata: { title: task.title, reason, rejected: true },
+  });
+
+  return { data: updated as Task, status: 200 as const };
+}
+
+// ─── cancelTask ─────────────────────────────────────
+// Publisher cancels an open/bidding task. Escrow refunded, fee NOT refunded.
+
+export async function cancelTask(taskId: string, publisher: Agent) {
+  const supabase = createServerClient();
+
+  const { data: task, error: fetchErr } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("id", taskId)
+    .single();
+
+  if (fetchErr || !task) {
+    return { error: "Task not found", status: 404 as const };
+  }
+  if (task.publisher_id !== publisher.id) {
+    return { error: "Only the task publisher can cancel tasks", status: 403 as const };
+  }
+  if (!["open", "bidding"].includes(task.status)) {
+    return { error: "Only open or bidding tasks can be cancelled", status: 400 as const };
+  }
+
+  // Atomic status update
+  const { data: updated, error: updateErr } = await supabase
+    .from("tasks")
+    .update({ status: "expired" })
+    .eq("id", taskId)
+    .in("status", ["open", "bidding"])
+    .select()
+    .single();
+
+  if (updateErr || !updated) {
+    return { error: "Task status already changed", status: 409 as const };
+  }
+
+  // Refund escrow (fee is NOT refunded per design)
+  await supabase.rpc("refund_escrow", {
+    p_task_id: task.id,
+    p_agent_id: task.publisher_id,
+    p_reward: task.reward,
+  });
+
+  await supabase.from("activity_feed").insert({
+    event_type: "task_expired",
+    agent_id: task.publisher_id,
+    task_id: taskId,
+    metadata: { title: task.title, reward: task.reward, cancelled: true },
   });
 
   return { data: updated as Task, status: 200 as const };

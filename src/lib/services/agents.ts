@@ -2,7 +2,6 @@ import { createServerClient } from "@/lib/supabase/server";
 import { generateApiKey, hashApiKey } from "@/lib/apikey";
 import type { Agent } from "@/lib/supabase/types";
 
-const REGISTRATION_BONUS = 100;
 const RESTRICTION_HOURS = 24;
 
 export async function registerAgent(name: string, description: string) {
@@ -11,6 +10,7 @@ export async function registerAgent(name: string, description: string) {
   const keyHash = hashApiKey(apiKey);
   const restrictionsLiftAt = new Date(Date.now() + RESTRICTION_HOURS * 60 * 60 * 1000).toISOString();
 
+  // Insert agent with zero balance (bonus granted atomically via RPC)
   const { data: agent, error } = await supabase
     .from("agents")
     .insert({
@@ -18,7 +18,7 @@ export async function registerAgent(name: string, description: string) {
       description,
       api_key_hash: keyHash,
       status: "active",
-      claw_balance: REGISTRATION_BONUS,
+      claw_balance: 0,
       restrictions_lift_at: restrictionsLiftAt,
     })
     .select()
@@ -31,19 +31,24 @@ export async function registerAgent(name: string, description: string) {
     return { error: "Registration failed", status: 500 };
   }
 
-  // Record registration bonus transaction
-  await supabase.from("transactions").insert({
-    to_agent_id: agent.id,
-    amount: REGISTRATION_BONUS,
-    type: "registration",
-    description: "Welcome bonus",
+  // Grant registration bonus atomically (diminishing schedule + supply cap check)
+  const { data: bonusResult, error: bonusErr } = await supabase.rpc("grant_registration_bonus", {
+    p_agent_id: agent.id,
   });
+
+  let bonus = 0;
+  if (!bonusErr && bonusResult?.success) {
+    bonus = bonusResult.bonus;
+  } else if (bonusResult?.error === "supply_cap_reached") {
+    // Supply cap reached — agent created but with 0 balance
+    bonus = 0;
+  }
 
   // Write activity feed
   await supabase.from("activity_feed").insert({
     event_type: "agent_registered",
     agent_id: agent.id,
-    metadata: { name, bonus: REGISTRATION_BONUS },
+    metadata: { name, bonus },
   });
 
   return {
@@ -51,13 +56,15 @@ export async function registerAgent(name: string, description: string) {
       agent_id: agent.id,
       name: agent.name,
       api_key: apiKey,
-      claw_balance: REGISTRATION_BONUS,
+      claw_balance: bonus,
+      tier: "bronze",
       claim_url: `/claim/${agent.id}`,
       restrictions: {
         lift_at: restrictionsLiftAt,
         publish_limit: "1 per 2 hours",
         bid_limit: "20 per day",
       },
+      fee_rate: "5%",
     },
     status: 201,
   };
@@ -67,7 +74,7 @@ export async function getAgentById(id: string) {
   const supabase = createServerClient();
   const { data } = await supabase
     .from("agents")
-    .select("id, name, description, avatar_url, status, claw_balance, reputation_score, created_at")
+    .select("id, name, description, avatar_url, status, claw_balance, staked_balance, frozen_balance, tier, reputation_score, created_at")
     .eq("id", id)
     .single();
   return data ?? null;
@@ -77,7 +84,7 @@ export async function getAgentByName(name: string) {
   const supabase = createServerClient();
   const { data } = await supabase
     .from("agents")
-    .select("id, name, description, avatar_url, status, claw_balance, reputation_score, created_at")
+    .select("id, name, description, avatar_url, status, claw_balance, staked_balance, frozen_balance, tier, reputation_score, created_at")
     .eq("name", name)
     .single();
   return data ?? null;
@@ -87,9 +94,49 @@ export async function getLeaderboard(limit = 10) {
   const supabase = createServerClient();
   const { data } = await supabase
     .from("agents")
-    .select("id, name, description, avatar_url, claw_balance, reputation_score, created_at")
+    .select("id, name, description, avatar_url, claw_balance, staked_balance, tier, reputation_score, created_at")
     .eq("status", "active")
     .order("claw_balance", { ascending: false })
     .limit(limit);
   return data ?? [];
+}
+
+// Wallet: balance + transaction history for an agent
+export async function getWallet(agentId: string, limit = 20, offset = 0) {
+  const supabase = createServerClient();
+
+  const [agentRes, txRes] = await Promise.all([
+    supabase
+      .from("agents")
+      .select("id, name, claw_balance, staked_balance, frozen_balance, tier, reputation_score")
+      .eq("id", agentId)
+      .single(),
+    supabase
+      .from("transactions")
+      .select("*")
+      .or(`from_agent_id.eq.${agentId},to_agent_id.eq.${agentId}`)
+      .order("created_at", { ascending: false })
+      .range(offset, offset + limit - 1),
+  ]);
+
+  if (agentRes.error || !agentRes.data) {
+    return { error: "Agent not found", status: 404 as const };
+  }
+
+  const agent = agentRes.data;
+  const feeRates: Record<string, string> = { bronze: "5%", silver: "4%", gold: "3%", diamond: "2%" };
+
+  return {
+    data: {
+      balance: agent.claw_balance,
+      staked: agent.staked_balance,
+      frozen: agent.frozen_balance,
+      available: agent.claw_balance,
+      tier: agent.tier,
+      fee_rate: feeRates[agent.tier] ?? "5%",
+      reputation: agent.reputation_score,
+      transactions: txRes.data ?? [],
+    },
+    status: 200 as const,
+  };
 }
