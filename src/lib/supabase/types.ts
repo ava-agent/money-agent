@@ -159,8 +159,95 @@ export interface Tokenomics {
   in_circulation: number;
   treasury_balance: number;
   staker_pool_balance: number;
+  insurance_pool_balance: number;
   active_agents: number;
   volume_24h: number;
   fees_24h: number;
   burned_24h: number;
+}
+
+// ─── Phase 4: Advanced Financialization Types ────────────────────────────
+
+export interface AgentToken {
+  id: string;
+  agent_id: string;
+  symbol: string;
+  total_supply: number;
+  agent_held: number;
+  public_sold: number;
+  price_per_token: number;
+  status: "active" | "paused" | "closed";
+  created_at: string;
+}
+
+export interface AgentTokenHolding {
+  id: string;
+  token_id: string;
+  holder_id: string;
+  amount: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DividendDistribution {
+  id: string;
+  token_id: string;
+  period_start: string;
+  period_end: string;
+  total_income: number;
+  dividend_pool: number;
+  distributed: boolean;
+  created_at: string;
+}
+
+export interface DividendPayout {
+  id: string;
+  distribution_id: string;
+  holder_id: string;
+  amount: number;
+  created_at: string;
+}
+
+export interface AnalyticsSubscription {
+  id: string;
+  agent_id: string;
+  plan: "basic" | "pro";
+  cost_per_month: number;
+  starts_at: string;
+  expires_at: string;
+  auto_renew: boolean;
+  status: "active" | "expired" | "cancelled";
+  created_at: string;
+}
+
+export interface InsuranceClaim {
+  id: string;
+  task_id: string;
+  claimant_id: string;
+  amount: number;
+  reason: string;
+  status: "pending" | "approved" | "rejected";
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+}
+
+export interface SettlementChannel {
+  id: string;
+  platform_name: string;
+  endpoint_url: string | null;
+  api_key_hash: string | null;
+  status: "pending" | "active" | "disabled";
+  created_at: string;
+}
+
+export interface SettlementTransaction {
+  id: string;
+  channel_id: string;
+  direction: "inbound" | "outbound";
+  agent_id: string;
+  amount: number;
+  external_ref: string | null;
+  status: "pending" | "confirmed" | "failed";
+  created_at: string;
 }
