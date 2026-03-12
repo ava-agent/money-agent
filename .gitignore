@@ -46,3 +46,6 @@ next-env.d.ts
 # screenshots
 *.png
 !public/docs/*.png
+
+# superpowers
+.superpowers/
