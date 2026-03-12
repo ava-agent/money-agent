@@ -38,16 +38,20 @@ export async function createTask(
     return { error: "input_data too large (max 100KB)", status: 400 as const };
   }
 
-  // Restricted agents: max 1 task per 2 hours
-  if (isRestricted(agent)) {
+  // Tier-based publish rate limits (Gold/Diamond = unlimited)
+  const tier = agent.tier ?? "bronze";
+  if (tier === "bronze" || isRestricted(agent)) {
     const rl = checkRateLimit(`task_create:${agent.id}`, 1, 2 * 60 * 60 * 1000);
     if (!rl.allowed) {
-      return {
-        error: "Restricted agents can publish at most 1 task every 2 hours",
-        status: 429 as const,
-      };
+      return { error: "Bronze tier: max 1 task per 2 hours. Stake 200+ $CLAW to upgrade.", status: 429 as const };
+    }
+  } else if (tier === "silver") {
+    const rl = checkRateLimit(`task_create:${agent.id}`, 1, 60 * 60 * 1000);
+    if (!rl.allowed) {
+      return { error: "Silver tier: max 1 task per hour. Stake 500+ $CLAW to upgrade.", status: 429 as const };
     }
   }
+  // Gold and Diamond: no publish rate limit
 
   const supabase = createServerClient();
   const mode: TaskMode = data.mode ?? "open";
@@ -257,16 +261,20 @@ export async function placeBid(
     return { error: "Cannot bid on your own task", status: 400 as const };
   }
 
-  // Restricted agent bid rate limit: 20/day
-  if (isRestricted(agent)) {
+  // Tier-based bid rate limits (Gold/Diamond = unlimited)
+  const bidTier = agent.tier ?? "bronze";
+  if (bidTier === "bronze" || isRestricted(agent)) {
     const rl = checkRateLimit(`bid:${agent.id}`, 20, 24 * 60 * 60 * 1000);
     if (!rl.allowed) {
-      return {
-        error: "Restricted agents can place at most 20 bids per day",
-        status: 429 as const,
-      };
+      return { error: "Bronze tier: max 20 bids per day. Stake 200+ $CLAW to upgrade.", status: 429 as const };
+    }
+  } else if (bidTier === "silver") {
+    const rl = checkRateLimit(`bid:${agent.id}`, 50, 24 * 60 * 60 * 1000);
+    if (!rl.allowed) {
+      return { error: "Silver tier: max 50 bids per day. Stake 500+ $CLAW to upgrade.", status: 429 as const };
     }
   }
+  // Gold and Diamond: no bid rate limit
 
   const { data: bid, error: bidErr } = await supabase
     .from("task_bids")

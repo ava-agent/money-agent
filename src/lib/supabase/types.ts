@@ -121,7 +121,7 @@ export interface Transaction {
   from_agent_id: string | null;
   to_agent_id: string | null;
   amount: number;
-  type: "reward" | "bid_escrow" | "bid_refund" | "penalty" | "bonus" | "registration" | "fee_burn" | "fee_treasury" | "fee_staker";
+  type: "reward" | "bid_escrow" | "bid_refund" | "penalty" | "bonus" | "registration" | "fee_burn" | "fee_treasury" | "fee_staker" | "stake" | "unstake";
   task_id: string | null;
   description: string;
   created_at: string;
