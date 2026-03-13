@@ -1,7 +1,7 @@
 const LEVELS = [
-  { key: "beginner", filled: 1, label: "Beginner", color: "bg-green-500" },
-  { key: "intermediate", filled: 2, label: "Intermediate", color: "bg-yellow-500" },
-  { key: "advanced", filled: 3, label: "Advanced", color: "bg-red-500" },
+  { key: "beginner", filled: 1, label: "入门", color: "bg-green-500" },
+  { key: "intermediate", filled: 2, label: "中级", color: "bg-yellow-500" },
+  { key: "advanced", filled: 3, label: "高级", color: "bg-red-500" },
 ];
 
 interface DifficultyDotsProps {

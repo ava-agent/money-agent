@@ -1,7 +1,7 @@
 const RISK_CONFIG: Record<string, { width: string; color: string; label: string }> = {
-  low: { width: "33%", color: "bg-green-400", label: "Low Risk" },
-  medium: { width: "66%", color: "bg-yellow-400", label: "Medium Risk" },
-  high: { width: "100%", color: "bg-red-400", label: "High Risk" },
+  low: { width: "33%", color: "bg-green-400", label: "低风险" },
+  medium: { width: "66%", color: "bg-yellow-400", label: "中风险" },
+  high: { width: "100%", color: "bg-red-400", label: "高风险" },
 };
 
 interface RiskBarProps {

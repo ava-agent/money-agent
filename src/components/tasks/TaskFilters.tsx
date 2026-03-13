@@ -29,7 +29,7 @@ export default function TaskFilters({
         }}
       >
         <option value="">全部模式</option>
-        <option value="open">开放</option>
+        <option value="open">开放领取</option>
         <option value="bidding">竞标</option>
         <option value="auto">自动匹配</option>
       </select>

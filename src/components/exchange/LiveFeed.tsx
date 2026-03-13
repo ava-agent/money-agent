@@ -33,37 +33,37 @@ function eventDescription(event: FeedEvent) {
     case "task_created":
       return {
         agent: agentName,
-        text: `发布了 "${title}"`,
+        text: `发布了「${title}」`,
         amount: reward,
       };
     case "task_claimed":
-      return { agent: agentName, text: `领取了 "${title}"` };
+      return { agent: agentName, text: `领取了「${title}」` };
     case "bid_placed":
       return {
         agent: agentName,
-        text: `竞标了 "${title}"`,
+        text: `竞标「${title}」`,
         amount: bidAmount,
       };
     case "task_completed":
       return {
         agent: agentName,
-        text: `完成了 "${title}"`,
+        text: `完成了「${title}」`,
         amount: reward,
         sign: "+" as const,
       };
     case "task_submitted":
-      return { agent: agentName, text: `提交了 "${title}"` };
+      return { agent: agentName, text: `提交了「${title}」` };
     case "task_expired":
       return {
         agent: agentName,
-        text: `"${title}" 已过期`,
+        text: `「${title}」超时`,
         amount: penalty,
         sign: "-" as const,
       };
     case "task_failed":
       return {
         agent: agentName,
-        text: `"${title}" 失败`,
+        text: `「${title}」失败`,
         amount: penalty,
         sign: "-" as const,
       };
@@ -75,7 +75,7 @@ function eventDescription(event: FeedEvent) {
         sign: "+" as const,
       };
     case "task_assigned":
-      return { agent: agentName, text: `被分配了 "${title}"` };
+      return { agent: agentName, text: `被分配了「${title}」` };
     default:
       return { agent: agentName, text: event.event_type };
   }
@@ -88,14 +88,14 @@ export default function LiveFeed() {
     <div className="bg-white rounded-xl shadow-warm p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>
-          实时动态
+          Live Activity
         </h2>
         <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--muted)" }}>
           <span className="relative flex h-1.5 w-1.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
           </span>
-          自动更新
+          auto-updating
         </span>
       </div>
 
@@ -107,7 +107,7 @@ export default function LiveFeed() {
         </div>
       ) : events.length === 0 ? (
         <p className="text-center py-12 text-gray-400">
-          暂无活动。等待第一个 Agent 注册...
+          No activity yet. Waiting for the first agent to register...
         </p>
       ) : (
         <ul className="space-y-3">

@@ -9,31 +9,31 @@ export default function Ticker() {
     <div className="bg-slate-900 text-white rounded-lg px-6 py-4 flex flex-wrap items-center justify-between gap-4">
       <div className="flex flex-wrap items-center gap-6 text-sm">
         <Stat
-          label="$CLAW 流通"
+          label="$CLAW Supply"
           value={(stats.claw_in_circulation ?? 0).toLocaleString()}
           color="text-green-400"
           loading={loading}
         />
         <Stat
-          label="已销毁"
+          label="Burned"
           value={(stats.total_burned ?? 0).toLocaleString()}
           color="text-red-400"
           loading={loading}
         />
         <Stat
-          label="24h 交易量"
+          label="24h Volume"
           value={(stats.volume_24h ?? 0).toLocaleString()}
           color="text-amber-400"
           loading={loading}
         />
         <Stat
-          label="Agent 数量"
+          label="Agents"
           value={(stats.active_agents ?? 0).toLocaleString()}
           color="text-sky-400"
           loading={loading}
         />
         <Stat
-          label="进行中"
+          label="In Progress"
           value={(stats.tasks_in_progress ?? 0).toLocaleString()}
           color="text-purple-400"
           loading={loading}
@@ -45,7 +45,7 @@ export default function Ticker() {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
         </span>
-        实时
+        LIVE
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ export default function TrendingAgents() {
     return (
       <div className="flex items-center gap-4">
         <span className="text-xs font-semibold tracking-wider uppercase" style={{ color: "var(--muted)" }}>
-          热门 Agents
+          Trending Agents
         </span>
         <div className="flex gap-2">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -28,7 +28,7 @@ export default function TrendingAgents() {
   return (
     <div className="flex items-center gap-4 overflow-x-auto pb-1">
       <span className="text-xs font-semibold tracking-wider uppercase shrink-0" style={{ color: "var(--muted)" }}>
-        热门
+        Trending
       </span>
       <div className="flex gap-2">
         {agents.map((agent, i) => (

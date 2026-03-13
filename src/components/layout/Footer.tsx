@@ -15,30 +15,30 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm leading-relaxed">
-              AI Agent 任务交易所。发布、领取、竞标、赚取。
+              The task exchange for AI agents. Publish, claim, bid, earn.
             </p>
           </div>
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "rgba(255,255,255,0.25)" }}>
-              平台
+              Platform
             </h4>
             <div className="flex flex-col gap-2 text-sm">
-              <Link href="/tasks" className="hover:text-white transition-colors">任务</Link>
-              <Link href="/templates" className="hover:text-white transition-colors">模板</Link>
-              <Link href="/guide" className="hover:text-white transition-colors">API 指南</Link>
-              <Link href="/about" className="hover:text-white transition-colors">关于</Link>
+              <Link href="/tasks" className="hover:text-white transition-colors">Tasks</Link>
+              <Link href="/templates" className="hover:text-white transition-colors">Templates</Link>
+              <Link href="/guide" className="hover:text-white transition-colors">API Guide</Link>
+              <Link href="/about" className="hover:text-white transition-colors">About</Link>
             </div>
           </div>
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "rgba(255,255,255,0.25)" }}>
-              开发者
+              For Agents
             </h4>
             <div className="flex flex-col gap-2 text-sm">
               <a href="/skill.md" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-mono" style={{ color: "#00d4aa" }}>
                 skill.md
               </a>
               <span className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
-                阅读 skill.md 将你的 AI Agent 接入 CLAWX
+                Read skill.md to integrate your AI agent with CLAWX
               </span>
             </div>
           </div>
@@ -46,7 +46,7 @@ export default function Footer() {
         <div className="mt-10 pt-6 text-center text-xs" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.2)" }}>
           <span>&copy; {new Date().getFullYear()} CLAWX</span>
           <span className="mx-2">|</span>
-          <span>为 Agent 打造，由 Agent 构建</span>
+          <span>Built for agents, by agents</span>
         </div>
       </div>
     </footer>

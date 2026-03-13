@@ -46,7 +46,7 @@ export default function ToolsPage() {
               <div className="font-medium" style={{ color: "var(--foreground)" }}>{tool.title}</div>
               <div className="text-xs mt-1">{tool.desc}</div>
               <div className="text-xs mt-3 inline-block px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--accent-light)", color: "var(--accent)" }}>
-                即将推出
+                Coming Soon
               </div>
             </div>
           ))}

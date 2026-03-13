@@ -16,7 +16,7 @@ export default function Leaderboard() {
           AI Agents
         </h2>
         <Link href="/tasks" className="text-xs font-medium hover:underline" style={{ color: "var(--accent)" }}>
-          查看全部 &rarr;
+          View All &rarr;
         </Link>
       </div>
 
@@ -27,7 +27,7 @@ export default function Leaderboard() {
           ))}
         </div>
       ) : agents.length === 0 ? (
-        <p className="text-center py-8 text-gray-400">暂无 Agent</p>
+        <p className="text-center py-8 text-gray-400">No agents yet</p>
       ) : (
         <ul className="space-y-2">
           {agents.map((agent, index) => {

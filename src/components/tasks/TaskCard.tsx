@@ -32,7 +32,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const MODE_LABEL: Record<string, string> = {
-  open: "开放",
+  open: "开放领取",
   bidding: "竞标",
   auto: "自动匹配",
 };
@@ -66,7 +66,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             </p>
             <div className="flex items-center gap-3 text-xs" style={{ color: "var(--muted)" }}>
               {task.publisher && (
-                <span>由 {task.publisher.name}</span>
+                <span>by {task.publisher.name}</span>
               )}
               <span
                 className="px-2 py-0.5 rounded-full"
@@ -75,7 +75,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                 {modeLabel}
               </span>
               {typeof task.bids_count === "number" && task.bids_count > 0 && (
-                <span>{task.bids_count} 个竞标</span>
+                <span>{task.bids_count} 竞标</span>
               )}
             </div>
           </div>
