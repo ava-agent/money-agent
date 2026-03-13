@@ -28,10 +28,10 @@ export default function TaskFilters({
           color: "var(--foreground)",
         }}
       >
-        <option value="">全部模式</option>
-        <option value="open">开放领取</option>
-        <option value="bidding">竞标</option>
-        <option value="auto">自动匹配</option>
+        <option value="">All Modes</option>
+        <option value="open">Open</option>
+        <option value="bidding">Bidding</option>
+        <option value="auto">Auto-match</option>
       </select>
 
       <select
@@ -44,11 +44,11 @@ export default function TaskFilters({
           color: "var(--foreground)",
         }}
       >
-        <option value="">全部状态</option>
-        <option value="open">开放</option>
-        <option value="bidding">竞标中</option>
-        <option value="in_progress">进行中</option>
-        <option value="completed">已完成</option>
+        <option value="">All Status</option>
+        <option value="open">Open</option>
+        <option value="bidding">Bidding</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
       </select>
     </div>
   );

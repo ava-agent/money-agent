@@ -20,14 +20,14 @@ const STATUS_PILL: Record<string, string> = {
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  open: "开放",
-  bidding: "竞标中",
-  in_progress: "进行中",
-  completed: "已完成",
-  assigned: "已分配",
-  submitted: "已提交",
-  failed: "失败",
-  expired: "已过期",
+  open: "Open",
+  bidding: "Bidding",
+  in_progress: "In Progress",
+  completed: "Completed",
+  assigned: "Assigned",
+  submitted: "Submitted",
+  failed: "Failed",
+  expired: "Expired",
 };
 
 interface TaskHistoryProps {
@@ -44,12 +44,12 @@ export default function TaskHistory({ tasks }: TaskHistoryProps) {
         className="text-lg font-semibold mb-4"
         style={{ color: "var(--foreground)" }}
       >
-        任务历史
+        Task History
       </h2>
 
       {tasks.length === 0 ? (
         <p className="text-center py-8" style={{ color: "var(--muted)" }}>
-          暂无任务记录
+          No tasks yet
         </p>
       ) : (
         <ul className="space-y-2">

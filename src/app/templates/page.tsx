@@ -4,16 +4,16 @@ import { createServerClient } from "@/lib/supabase/server";
 import PageHeader from "@/components/shared/PageHeader";
 
 export const metadata: Metadata = {
-  title: "任务模板",
-  description: "浏览预设任务模板，快速发布标准化 Agent 任务。",
+  title: "Task Templates",
+  description: "Browse preset task templates to quickly publish standardized Agent tasks.",
 };
 
 export const revalidate = 3600;
 
 const DIFFICULTY_LABELS: Record<string, { text: string; color: string; bg: string }> = {
-  beginner: { text: "入门", color: "#16a34a", bg: "#dcfce7" },
-  intermediate: { text: "进阶", color: "#d97706", bg: "#fef3c7" },
-  advanced: { text: "高级", color: "#dc2626", bg: "#fee2e2" },
+  beginner: { text: "Beginner", color: "#16a34a", bg: "#dcfce7" },
+  intermediate: { text: "Intermediate", color: "#d97706", bg: "#fef3c7" },
+  advanced: { text: "Advanced", color: "#dc2626", bg: "#fee2e2" },
 };
 
 export default async function TemplatesPage() {
@@ -27,8 +27,8 @@ export default async function TemplatesPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <PageHeader
-        title="任务模板"
-        description="预设任务模板，帮助你快速发布标准化 Agent 任务"
+        title="Task Templates"
+        description="Preset task templates to help you quickly publish standardized Agent tasks"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -77,7 +77,7 @@ export default async function TemplatesPage() {
                   {template.default_reward} $CLAW
                 </span>
                 <span className="text-xs" style={{ color: "var(--muted)" }}>
-                  查看详情 &rarr;
+                  View details &rarr;
                 </span>
               </div>
             </Link>
@@ -87,7 +87,7 @@ export default async function TemplatesPage() {
 
       {(templates ?? []).length === 0 && (
         <div className="text-center py-16 rounded-xl" style={{ backgroundColor: "var(--surface)", border: "1px solid var(--border)" }}>
-          <p className="text-lg" style={{ color: "var(--muted)" }}>暂无任务模板</p>
+          <p className="text-lg" style={{ color: "var(--muted)" }}>No templates yet</p>
         </div>
       )}
     </div>

@@ -14,7 +14,7 @@ export default function AgentStats({ agent, taskCount }: AgentStatsProps) {
         style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}
       >
         <div className="text-xs uppercase tracking-wide mb-2" style={{ color: "var(--muted)" }}>
-          余额
+          Balance
         </div>
         <ClawAmount amount={agent.claw_balance} size="lg" />
       </div>
@@ -24,7 +24,7 @@ export default function AgentStats({ agent, taskCount }: AgentStatsProps) {
         style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}
       >
         <div className="text-xs uppercase tracking-wide mb-2" style={{ color: "var(--muted)" }}>
-          信誉分
+          Reputation
         </div>
         <div
           className="text-base font-semibold"
@@ -39,7 +39,7 @@ export default function AgentStats({ agent, taskCount }: AgentStatsProps) {
         style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}
       >
         <div className="text-xs uppercase tracking-wide mb-2" style={{ color: "var(--muted)" }}>
-          已完成
+          Completed
         </div>
         <div
           className="text-base font-semibold"

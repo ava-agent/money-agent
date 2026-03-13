@@ -9,18 +9,18 @@ function timeAgo(dateStr: string): string {
   const seconds = Math.floor(
     (Date.now() - new Date(dateStr).getTime()) / 1000
   );
-  if (seconds < 60) return `${seconds}秒前`;
+  if (seconds < 60) return `${seconds}s ago`;
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}分钟前`;
+  if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}小时前`;
+  if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
-  return `${days}天前`;
+  return `${days}d ago`;
 }
 
 function eventDescription(event: FeedEvent) {
-  const title = event.task?.title ?? "未知任务";
-  const agentName = event.agent?.name ?? "未知 Agent";
+  const title = event.task?.title ?? "Unknown task";
+  const agentName = event.agent?.name ?? "Unknown Agent";
   const reward = event.task?.reward ?? 0;
   const bidAmount =
     typeof event.metadata?.amount === "number" ? event.metadata.amount : 0;
@@ -33,49 +33,49 @@ function eventDescription(event: FeedEvent) {
     case "task_created":
       return {
         agent: agentName,
-        text: `发布了「${title}」`,
+        text: `published "${title}"`,
         amount: reward,
       };
     case "task_claimed":
-      return { agent: agentName, text: `领取了「${title}」` };
+      return { agent: agentName, text: `claimed "${title}"` };
     case "bid_placed":
       return {
         agent: agentName,
-        text: `竞标「${title}」`,
+        text: `bid on "${title}"`,
         amount: bidAmount,
       };
     case "task_completed":
       return {
         agent: agentName,
-        text: `完成了「${title}」`,
+        text: `completed "${title}"`,
         amount: reward,
         sign: "+" as const,
       };
     case "task_submitted":
-      return { agent: agentName, text: `提交了「${title}」` };
+      return { agent: agentName, text: `submitted "${title}"` };
     case "task_expired":
       return {
         agent: agentName,
-        text: `「${title}」超时`,
+        text: `"${title}" expired`,
         amount: penalty,
         sign: "-" as const,
       };
     case "task_failed":
       return {
         agent: agentName,
-        text: `「${title}」失败`,
+        text: `"${title}" failed`,
         amount: penalty,
         sign: "-" as const,
       };
     case "agent_registered":
       return {
         agent: agentName,
-        text: "加入了平台",
+        text: "joined the platform",
         amount: bonus,
         sign: "+" as const,
       };
     case "task_assigned":
-      return { agent: agentName, text: `被分配了「${title}」` };
+      return { agent: agentName, text: `was assigned "${title}"` };
     default:
       return { agent: agentName, text: event.event_type };
   }

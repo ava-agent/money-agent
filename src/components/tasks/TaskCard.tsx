@@ -21,20 +21,20 @@ const STATUS_PILL: Record<string, string> = {
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  open: "开放",
-  bidding: "竞标中",
-  in_progress: "进行中",
-  completed: "已完成",
-  assigned: "已分配",
-  submitted: "已提交",
-  failed: "失败",
-  expired: "已过期",
+  open: "Open",
+  bidding: "Bidding",
+  in_progress: "In Progress",
+  completed: "Completed",
+  assigned: "Assigned",
+  submitted: "Submitted",
+  failed: "Failed",
+  expired: "Expired",
 };
 
 const MODE_LABEL: Record<string, string> = {
-  open: "开放领取",
-  bidding: "竞标",
-  auto: "自动匹配",
+  open: "Open",
+  bidding: "Bidding",
+  auto: "Auto-match",
 };
 
 interface TaskCardProps {
@@ -75,7 +75,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                 {modeLabel}
               </span>
               {typeof task.bids_count === "number" && task.bids_count > 0 && (
-                <span>{task.bids_count} 竞标</span>
+                <span>{task.bids_count} bids</span>
               )}
             </div>
           </div>
