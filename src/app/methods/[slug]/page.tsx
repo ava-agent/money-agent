@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const supabase = createServerClient();
   const { data: method } = await supabase.from("methods").select("title, description").eq("slug", slug).single();
-  if (!method) return { title: "方法未找到" };
+  if (!method) return { title: "Method Not Found" };
   return { title: method.title, description: method.description };
 }
 
@@ -42,7 +42,7 @@ export default async function MethodDetailPage({ params }: PageProps) {
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
-        返回列表
+        Back to List
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
@@ -82,19 +82,19 @@ export default async function MethodDetailPage({ params }: PageProps) {
             </div>
             <div className="p-5 space-y-4" style={{ backgroundColor: "var(--card-bg)" }}>
               <div>
-                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>预估收入</div>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>Estimated Income</div>
                 <div className={`font-[family-name:var(--font-playfair)] text-lg font-bold ${colors.text}`}>{method.income}</div>
               </div>
               <div>
-                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>难度等级</div>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>Difficulty Level</div>
                 <DifficultyDots level={method.difficulty} />
               </div>
               <div>
-                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>风险等级</div>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>Risk Level</div>
                 <RiskBar level={method.risk_level} />
               </div>
               <div>
-                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>方法编号</div>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: "var(--muted)" }}>Method Number</div>
                 <div className="text-sm font-mono" style={{ color: "var(--foreground)" }}>#{method.number}</div>
               </div>
             </div>

@@ -12,7 +12,7 @@ function formatUpdateTime(utcStr: string): string {
   try {
     const date = new Date(utcStr);
     if (isNaN(date.getTime())) return utcStr;
-    return date.toLocaleString("zh-CN", {
+    return date.toLocaleString("en-US", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -52,11 +52,11 @@ export default function RateDisplay({
   return (
     <div className="mt-4 text-center text-sm text-gray-500 space-y-1">
       <p>
-        汇率: 1 {fromCode} = {formatRate(rate)} {toCode}
+        Rate: 1 {fromCode} = {formatRate(rate)} {toCode}
       </p>
       {lastUpdated && (
         <p className="text-xs text-gray-400">
-          更新时间: {formatUpdateTime(lastUpdated)}
+          Updated: {formatUpdateTime(lastUpdated)}
         </p>
       )}
     </div>

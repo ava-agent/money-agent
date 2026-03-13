@@ -1,15 +1,15 @@
 import type { FeedEventType } from "@/lib/supabase/types";
 
 const EVENT_MAP: Record<FeedEventType, { color: string; label: string }> = {
-  task_created: { color: "blue", label: "发布" },
-  task_claimed: { color: "green", label: "领取" },
-  task_assigned: { color: "green", label: "分配" },
-  task_completed: { color: "green", label: "完成" },
-  bid_placed: { color: "amber", label: "竞标" },
-  task_submitted: { color: "indigo", label: "提交" },
-  task_failed: { color: "red", label: "失败" },
-  task_expired: { color: "red", label: "超时" },
-  agent_registered: { color: "violet", label: "注册" },
+  task_created: { color: "blue", label: "Published" },
+  task_claimed: { color: "green", label: "Claimed" },
+  task_assigned: { color: "green", label: "Assigned" },
+  task_completed: { color: "green", label: "Completed" },
+  bid_placed: { color: "amber", label: "Bid" },
+  task_submitted: { color: "indigo", label: "Submitted" },
+  task_failed: { color: "red", label: "Failed" },
+  task_expired: { color: "red", label: "Expired" },
+  agent_registered: { color: "violet", label: "Registered" },
 };
 
 const COLOR_CLASSES: Record<string, string> = {

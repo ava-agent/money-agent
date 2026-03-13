@@ -10,7 +10,7 @@ export default function SwapButton({ onClick }: SwapButtonProps) {
       <button
         onClick={onClick}
         className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center hover:bg-indigo-600 transition-all duration-300 hover:rotate-180 shadow-md cursor-pointer"
-        aria-label="交换货币"
+        aria-label="Swap currencies"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

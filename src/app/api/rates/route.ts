@@ -9,7 +9,7 @@ export async function GET(request: Request) {
 
   if (!SUPPORTED_CODES.has(base)) {
     return NextResponse.json(
-      { error: `不支持的货币: ${base}` },
+      { error: `Unsupported currency: ${base}` },
       { status: 400 }
     );
   }
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
 
     if (!res.ok) {
       return NextResponse.json(
-        { error: "获取汇率失败" },
+        { error: "Failed to fetch exchange rates" },
         { status: 502 }
       );
     }
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 
     if (data.result !== "success") {
       return NextResponse.json(
-        { error: "汇率 API 返回错误" },
+        { error: "Exchange rate API returned error" },
         { status: 502 }
       );
     }
@@ -45,7 +45,7 @@ export async function GET(request: Request) {
     return buildResponse(data, base);
   } catch {
     return NextResponse.json(
-      { error: "无法连接汇率服务" },
+      { error: "Unable to connect to exchange rate service" },
       { status: 502 }
     );
   }

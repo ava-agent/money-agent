@@ -62,7 +62,7 @@ export default function Navbar() {
           className="md:hidden p-2 rounded-lg cursor-pointer"
           style={{ color: "rgba(255,255,255,0.7)" }}
           onClick={() => setOpen(!open)}
-          aria-label="菜单"
+          aria-label="Menu"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {open ? (

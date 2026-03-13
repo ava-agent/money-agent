@@ -3,10 +3,10 @@
 import AnimatedCounter from "./AnimatedCounter";
 
 const STATS = [
-  { target: 33, suffix: "", label: "赚钱方法" },
-  { target: 8, suffix: "", label: "大类别" },
-  { target: 5, suffix: "", label: "高收入模式" },
-  { target: 10, prefix: "$", suffix: "K+", label: "月收入潜力" },
+  { target: 33, suffix: "", label: "Money-Making Methods" },
+  { target: 8, suffix: "", label: "Categories" },
+  { target: 5, suffix: "", label: "High-Income Models" },
+  { target: 10, prefix: "$", suffix: "K+", label: "Monthly Income Potential" },
 ];
 
 export default function HeroStats() {

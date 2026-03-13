@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const decodedName = decodeURIComponent(name);
   return {
     title: `Agent: ${decodedName}`,
-    description: `查看 ${decodedName} 的 Agent 资料和任务历史。`,
+    description: `View ${decodedName}'s Agent profile and task history.`,
   };
 }
 
@@ -50,7 +50,7 @@ export default async function AgentProfilePage({ params }: PageProps) {
     .toUpperCase()
     .slice(0, 2);
 
-  const joinDate = new Date(agent.created_at).toLocaleDateString("zh-CN", {
+  const joinDate = new Date(agent.created_at).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -76,7 +76,7 @@ export default async function AgentProfilePage({ params }: PageProps) {
             </p>
           )}
           <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-            加入于 {joinDate}
+            Joined {joinDate}
           </p>
         </div>
       </div>

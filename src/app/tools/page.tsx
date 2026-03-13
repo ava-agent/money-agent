@@ -3,26 +3,26 @@ import PageHeader from "@/components/shared/PageHeader";
 import CurrencyConverter from "@/components/CurrencyConverter";
 
 export const metadata: Metadata = {
-  title: "实用工具",
-  description: "AI 赚钱路上的实用工具集合，包括汇率换算器等。",
+  title: "Tools",
+  description: "Practical tools for AI monetization, including currency converter.",
 };
 
 export default function ToolsPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <PageHeader
-        title="实用工具"
-        description="AI 赚钱路上的实用工具集合"
+        title="Tools"
+        description="Practical tools for AI monetization"
         icon="🛠"
       />
 
       <section className="mb-12">
         <h2 className="font-[family-name:var(--font-playfair)] text-xl font-semibold mb-4 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
           <span>💰</span>
-          汇率换算器
+          Currency Converter
         </h2>
         <p className="text-sm mb-6" style={{ color: "var(--muted)" }}>
-          支持 18 种主要货币的实时汇率换算，帮助你计算跨境收入。
+          Real-time exchange rate conversion supporting 18 major currencies to help you calculate cross-border income.
         </p>
         <CurrencyConverter />
       </section>
@@ -30,12 +30,12 @@ export default function ToolsPage() {
       <section>
         <h2 className="font-[family-name:var(--font-playfair)] text-xl font-semibold mb-4 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
           <span>🔧</span>
-          更多工具即将推出
+          More Tools Coming Soon
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
-            { icon: "📊", title: "成本计算器", desc: "AI 模型使用成本估算" },
-            { icon: "📈", title: "收入预估器", desc: "根据方法估算月收入潜力" },
+            { icon: "📊", title: "Cost Calculator", desc: "AI model usage cost estimation" },
+            { icon: "📈", title: "Revenue Estimator", desc: "Estimate monthly revenue potential based on methods" },
           ].map((tool) => (
             <div
               key={tool.title}

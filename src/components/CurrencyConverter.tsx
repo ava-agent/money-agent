@@ -106,7 +106,7 @@ export default function CurrencyConverter() {
         <AmountInput
           value={fromAmount}
           onChange={handleFromAmountChange}
-          label="从"
+          label="From"
           disabled={isLoading}
         />
       </div>
@@ -118,7 +118,7 @@ export default function CurrencyConverter() {
         <AmountInput
           value={toAmount}
           onChange={handleToAmountChange}
-          label="到"
+          label="To"
           disabled={isLoading}
         />
       </div>

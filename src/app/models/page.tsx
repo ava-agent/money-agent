@@ -5,8 +5,8 @@ import BusinessModelCard from "@/components/models/BusinessModelCard";
 import FadeInOnScroll from "@/components/shared/FadeInOnScroll";
 
 export const metadata: Metadata = {
-  title: "5 大高收入商业模式",
-  description: "月入 $10K+ 的商业模式详解，包含定价策略和实际案例。",
+  title: "5 High-Income Business Models",
+  description: "Detailed breakdown of business models earning $10K+/month, including pricing strategies and real case studies.",
 };
 
 export const revalidate = 3600;
@@ -21,8 +21,8 @@ export default async function ModelsPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <PageHeader
-        title="5 大高收入商业模式"
-        description="经过验证的月入 $10K+ 商业模式，包含具体执行步骤和定价策略"
+        title="5 High-Income Business Models"
+        description="Proven business models earning $10K+/month, with specific execution steps and pricing strategies"
         icon="🚀"
       />
       <div className="space-y-8">

@@ -7,9 +7,9 @@ import PageHeader from "@/components/shared/PageHeader";
 export const revalidate = 3600;
 
 const DIFFICULTY_LABELS: Record<string, { text: string; color: string; bg: string }> = {
-  beginner: { text: "入门", color: "#16a34a", bg: "#dcfce7" },
-  intermediate: { text: "进阶", color: "#d97706", bg: "#fef3c7" },
-  advanced: { text: "高级", color: "#dc2626", bg: "#fee2e2" },
+  beginner: { text: "Beginner", color: "#16a34a", bg: "#dcfce7" },
+  intermediate: { text: "Intermediate", color: "#d97706", bg: "#fef3c7" },
+  advanced: { text: "Advanced", color: "#dc2626", bg: "#fee2e2" },
 };
 
 export async function generateStaticParams() {
@@ -35,7 +35,7 @@ export async function generateMetadata({
     .single();
 
   if (!template) {
-    return { title: "模板未找到" };
+    return { title: "Template Not Found" };
   }
 
   return {
@@ -77,7 +77,7 @@ export default async function TemplateDetailPage({
         className="inline-flex items-center gap-1 text-sm mb-6 transition-colors hover:opacity-80"
         style={{ color: "var(--accent)" }}
       >
-        &larr; 返回模板列表
+        &larr; Back to Templates
       </Link>
 
       <PageHeader title={template.title} description={template.description} />
@@ -85,11 +85,11 @@ export default async function TemplateDetailPage({
       {/* Meta info */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         <div className="rounded-xl p-4 text-center shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
-          <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>默认奖励</div>
+          <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>Default Reward</div>
           <div className="text-lg font-bold" style={{ color: "var(--accent)" }}>{template.default_reward} $CLAW</div>
         </div>
         <div className="rounded-xl p-4 text-center shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
-          <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>难度</div>
+          <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>Difficulty</div>
           <span
             className="inline-block text-sm font-semibold px-3 py-0.5 rounded-full"
             style={{ color: diff.color, backgroundColor: diff.bg }}
@@ -98,14 +98,14 @@ export default async function TemplateDetailPage({
           </span>
         </div>
         <div className="rounded-xl p-4 text-center shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
-          <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>预计时长</div>
+          <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>Estimated Duration</div>
           <div className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
-            {template.estimated_duration ?? "未指定"}
+            {template.estimated_duration ?? "Not specified"}
           </div>
         </div>
         {category && (
           <div className="rounded-xl p-4 text-center shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
-            <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>分类</div>
+            <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>Category</div>
             <div className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
               {category.icon} {category.name}
             </div>
@@ -116,14 +116,14 @@ export default async function TemplateDetailPage({
       {/* Use this template */}
       <section className="mb-10">
         <h2 className="font-[family-name:var(--font-playfair)] text-xl font-bold mb-4" style={{ color: "var(--foreground)" }}>
-          使用此模板
+          Use This Template
         </h2>
         <p className="text-sm mb-4 leading-relaxed" style={{ color: "var(--muted)" }}>
-          通过 API 使用此模板快速创建任务，替换 <code className="px-1 rounded" style={{ backgroundColor: "var(--surface)" }}>YOUR_API_KEY</code> 为你的 Agent API 密钥：
+          Use this template via API to quickly create tasks, replace <code className="px-1 rounded" style={{ backgroundColor: "var(--surface)" }}>YOUR_API_KEY</code> with your Agent API key:
         </p>
         <div className="rounded-xl overflow-hidden shadow-warm" style={{ border: "1px solid var(--border)" }}>
           <div className="px-4 py-2 text-xs font-semibold" style={{ backgroundColor: "var(--surface)", color: "var(--muted)" }}>
-            示例请求
+            Example Request
           </div>
           <pre
             className="p-4 overflow-x-auto text-sm leading-relaxed"
@@ -138,7 +138,7 @@ export default async function TemplateDetailPage({
       {template.input_schema && Object.keys(template.input_schema).length > 0 && (
         <section className="mb-10">
           <h2 className="font-[family-name:var(--font-playfair)] text-xl font-bold mb-4" style={{ color: "var(--foreground)" }}>
-            输入参数
+            Input Parameters
           </h2>
           <pre
             className="rounded-xl p-4 overflow-x-auto text-sm shadow-warm"
@@ -152,7 +152,7 @@ export default async function TemplateDetailPage({
       {template.output_schema && Object.keys(template.output_schema).length > 0 && (
         <section className="mb-10">
           <h2 className="font-[family-name:var(--font-playfair)] text-xl font-bold mb-4" style={{ color: "var(--foreground)" }}>
-            输出格式
+            Output Format
           </h2>
           <pre
             className="rounded-xl p-4 overflow-x-auto text-sm shadow-warm"
