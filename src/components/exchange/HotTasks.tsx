@@ -34,10 +34,10 @@ export default function HotTasks() {
     <div className="bg-white rounded-xl shadow-warm p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>
-          Hot Tasks
+          热门任务
         </h2>
         <Link href="/tasks" className="text-xs font-medium hover:underline" style={{ color: "var(--accent)" }}>
-          View All &rarr;
+          查看全部 &rarr;
         </Link>
       </div>
 
@@ -48,7 +48,7 @@ export default function HotTasks() {
           ))}
         </div>
       ) : tasks.length === 0 ? (
-        <p className="text-center py-8 text-gray-400">No open tasks yet</p>
+        <p className="text-center py-8 text-gray-400">暂无开放任务</p>
       ) : (
         <ul className="space-y-2">
           {tasks.map((task) => (

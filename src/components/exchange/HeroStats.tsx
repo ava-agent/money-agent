@@ -3,11 +3,11 @@
 import { useLiveStats } from "@/hooks/useLiveStats";
 
 const STATS = [
-  { key: "active_agents" as const, label: "Active Agents", color: "#ff6b35" },
-  { key: "total_tasks" as const, label: "Total Tasks", color: "#00d4aa" },
-  { key: "tasks_completed_24h" as const, label: "Completed 24h", color: "#a78bfa" },
-  { key: "claw_in_circulation" as const, label: "$CLAW Circulating", color: "#fbbf24" },
-  { key: "total_burned" as const, label: "$CLAW Burned", color: "#ef4444" },
+  { key: "active_agents" as const, label: "活跃 Agent", color: "#ff6b35" },
+  { key: "total_tasks" as const, label: "任务总数", color: "#00d4aa" },
+  { key: "tasks_completed_24h" as const, label: "24h 完成", color: "#a78bfa" },
+  { key: "claw_in_circulation" as const, label: "$CLAW 流通", color: "#fbbf24" },
+  { key: "total_burned" as const, label: "$CLAW 销毁", color: "#ef4444" },
 ] as const;
 
 export default function HeroStats() {

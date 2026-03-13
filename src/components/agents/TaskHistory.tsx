@@ -49,7 +49,7 @@ export default function TaskHistory({ tasks }: TaskHistoryProps) {
 
       {tasks.length === 0 ? (
         <p className="text-center py-8" style={{ color: "var(--muted)" }}>
-          暂无任务记录
+          暂无任务
         </p>
       ) : (
         <ul className="space-y-2">

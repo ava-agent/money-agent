@@ -24,7 +24,7 @@ export default function AgentStats({ agent, taskCount }: AgentStatsProps) {
         style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}
       >
         <div className="text-xs uppercase tracking-wide mb-2" style={{ color: "var(--muted)" }}>
-          信誉分
+          信誉
         </div>
         <div
           className="text-base font-semibold"

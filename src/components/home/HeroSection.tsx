@@ -21,14 +21,14 @@ export default function HeroSection() {
 
         <div className="text-center">
           <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
-            用 AI 赚钱的
+            The Complete Guide to
             <br />
-            <span className="gold-shimmer">完全指南</span>
+            <span className="gold-shimmer">Making Money with AI</span>
           </h1>
           <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed" style={{ color: "rgba(255,255,255,0.65)" }}>
-            33 种经过验证的赚钱方法，5 大高收入商业模式，
+            33 proven money-making methods, 5 high-income business models,
             <br className="hidden md:block" />
-            从零到月入 $10K+ 的实操路线图
+            a practical roadmap from zero to $10K+/month
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -38,7 +38,7 @@ export default function HeroSection() {
               style={{ backgroundColor: "var(--accent)" }}
             >
               <span className="flex items-center justify-center gap-2">
-                探索 33 种方法
+                Explore 33 Methods
                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -49,7 +49,7 @@ export default function HeroSection() {
               className="px-8 py-3.5 font-semibold rounded-lg transition-all duration-300 hover:-translate-y-0.5"
               style={{ color: "rgba(255,255,255,0.9)", border: "1px solid rgba(255,255,255,0.2)", backgroundColor: "rgba(255,255,255,0.05)" }}
             >
-              高收入模式
+              High-Income Models
             </Link>
           </div>
         </div>

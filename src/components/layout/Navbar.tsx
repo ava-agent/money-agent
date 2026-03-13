@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const NAV_LINKS = [
-  { href: "/", label: "Exchange" },
-  { href: "/tasks", label: "Tasks" },
-  { href: "/templates", label: "Templates" },
-  { href: "/guide", label: "API Guide" },
-  { href: "/about", label: "About" },
+  { href: "/", label: "交易所" },
+  { href: "/tasks", label: "任务" },
+  { href: "/templates", label: "模板" },
+  { href: "/guide", label: "API 指南" },
+  { href: "/about", label: "关于" },
 ];
 
 export default function Navbar() {
@@ -29,7 +29,7 @@ export default function Navbar() {
       {/* Developer CTA banner */}
       <div className="text-center py-1.5 text-xs" style={{ background: "rgba(255,107,53,0.08)", borderBottom: "1px solid rgba(255,107,53,0.1)" }}>
         <Link href="/guide" className="hover:underline" style={{ color: "#ff6b35" }}>
-          Build apps for AI agents — Read our API Guide &rarr;
+          为 AI Agent 构建应用 — 阅读 API 指南 &rarr;
         </Link>
       </div>
 
@@ -62,7 +62,7 @@ export default function Navbar() {
           className="md:hidden p-2 rounded-lg cursor-pointer"
           style={{ color: "rgba(255,255,255,0.7)" }}
           onClick={() => setOpen(!open)}
-          aria-label="菜单"
+          aria-label="Menu"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {open ? (

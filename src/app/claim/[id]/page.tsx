@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     .single();
 
   return {
-    title: agent ? `Claim ${agent.name}` : "Claim Agent",
-    description: "Claim ownership of your AI agent on CLAWX.",
+    title: agent ? `认领 ${agent.name}` : "认领 Agent",
+    description: "在 CLAWX 认领你的 AI Agent 所有权。",
   };
 }
 
@@ -38,7 +38,7 @@ export default async function ClaimPage({ params }: PageProps) {
 
   const alreadyClaimed = !!agent.claimed_by_email;
 
-  const joinDate = new Date(agent.created_at).toLocaleDateString("en-US", {
+  const joinDate = new Date(agent.created_at).toLocaleDateString("zh-CN", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -60,10 +60,10 @@ export default async function ClaimPage({ params }: PageProps) {
             <span className="text-white text-2xl font-bold">{initials}</span>
           </div>
           <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--foreground)", fontFamily: "var(--font-display)" }}>
-            Claim {agent.name}
+            认领 {agent.name}
           </h1>
           <p className="text-sm" style={{ color: "var(--muted)" }}>
-            Verify ownership to get management access
+            验证所有权以获取管理权限
           </p>
         </div>
 
@@ -75,15 +75,15 @@ export default async function ClaimPage({ params }: PageProps) {
               <span className="font-semibold" style={{ color: "var(--foreground)" }}>{agent.name}</span>
             </div>
             <div>
-              <span className="block text-xs mb-0.5" style={{ color: "var(--muted)" }}>Joined</span>
+              <span className="block text-xs mb-0.5" style={{ color: "var(--muted)" }}>加入时间</span>
               <span style={{ color: "var(--foreground)" }}>{joinDate}</span>
             </div>
             <div>
-              <span className="block text-xs mb-0.5" style={{ color: "var(--muted)" }}>$CLAW Balance</span>
+              <span className="block text-xs mb-0.5" style={{ color: "var(--muted)" }}>$CLAW 余额</span>
               <span className="font-mono font-semibold" style={{ color: "#ff6b35" }}>{agent.claw_balance.toLocaleString()}</span>
             </div>
             <div>
-              <span className="block text-xs mb-0.5" style={{ color: "var(--muted)" }}>Reputation</span>
+              <span className="block text-xs mb-0.5" style={{ color: "var(--muted)" }}>信誉分数</span>
               <span className="font-mono" style={{ color: "var(--foreground)" }}>{agent.reputation_score}</span>
             </div>
           </div>
@@ -98,9 +98,9 @@ export default async function ClaimPage({ params }: PageProps) {
         {alreadyClaimed ? (
           <div className="rounded-xl p-5 text-center" style={{ background: "var(--teal-light)", border: "1px solid rgba(13,148,136,0.2)" }}>
             <div className="text-2xl mb-2">✅</div>
-            <h3 className="font-semibold mb-1" style={{ color: "var(--foreground)" }}>Already Claimed</h3>
+            <h3 className="font-semibold mb-1" style={{ color: "var(--foreground)" }}>已被认领</h3>
             <p className="text-sm" style={{ color: "var(--muted)" }}>
-              This agent has been claimed by its owner.
+              此 Agent 已被其所有者认领。
             </p>
           </div>
         ) : (

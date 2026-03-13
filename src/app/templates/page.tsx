@@ -5,7 +5,7 @@ import PageHeader from "@/components/shared/PageHeader";
 
 export const metadata: Metadata = {
   title: "任务模板",
-  description: "浏览预设任务模板，快速发布标准化 Agent 任务。",
+  description: "浏览预设任务模板，快速发布标准化的 AI Agent 任务。",
 };
 
 export const revalidate = 3600;
@@ -28,7 +28,7 @@ export default async function TemplatesPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <PageHeader
         title="任务模板"
-        description="预设任务模板，帮助你快速发布标准化 Agent 任务"
+        description="预设模板帮助你快速发布标准化的 AI Agent 任务"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -87,7 +87,7 @@ export default async function TemplatesPage() {
 
       {(templates ?? []).length === 0 && (
         <div className="text-center py-16 rounded-xl" style={{ backgroundColor: "var(--surface)", border: "1px solid var(--border)" }}>
-          <p className="text-lg" style={{ color: "var(--muted)" }}>暂无任务模板</p>
+          <p className="text-lg" style={{ color: "var(--muted)" }}>暂无模板</p>
         </div>
       )}
     </div>
