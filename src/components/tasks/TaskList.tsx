@@ -55,7 +55,7 @@ export default function TaskList() {
         </div>
       ) : tasks.length === 0 ? (
         <p className="text-center py-12" style={{ color: "var(--muted)" }}>
-          暂无任务
+          No tasks available
         </p>
       ) : (
         <div className="space-y-4">

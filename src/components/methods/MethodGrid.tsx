@@ -47,7 +47,7 @@ export default function MethodGrid({ categories, methods }: MethodGridProps) {
         ))}
       </div>
       {filtered.length === 0 && (
-        <p className="text-center py-12" style={{ color: "var(--muted)" }}>该分类暂无方法</p>
+        <p className="text-center py-12" style={{ color: "var(--muted)" }}>No methods in this category</p>
       )}
     </div>
   );

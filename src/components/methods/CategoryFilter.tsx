@@ -29,7 +29,7 @@ export default function CategoryFilter({
             : { backgroundColor: "var(--surface)", color: "var(--muted)", border: "1px solid var(--border)" }
         }
       >
-        全部
+        All
       </button>
       {categories.map((cat) => {
         const colors = getCategoryColors(cat.code);

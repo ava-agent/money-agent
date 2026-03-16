@@ -28,6 +28,7 @@ export default function StatusBadge({ type }: { type: FeedEventType }) {
   return (
     <span
       className={`${colorClass} px-2 py-0.5 rounded text-xs font-medium`}
+      aria-label={`Status: ${mapping.label}`}
     >
       {mapping.label}
     </span>

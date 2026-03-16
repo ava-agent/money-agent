@@ -15,12 +15,12 @@ export function useExchangeRate() {
       const res = await fetch("/api/rates?base=USD");
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || "获取汇率失败");
+        throw new Error(body.error || "Failed to fetch exchange rate");
       }
       const json: RatesResponse = await res.json();
       setData(json);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "获取汇率失败");
+      setError(err instanceof Error ? err.message : "Failed to fetch exchange rate");
     } finally {
       setIsLoading(false);
     }

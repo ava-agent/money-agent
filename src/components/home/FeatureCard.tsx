@@ -22,7 +22,7 @@ export default function FeatureCard({ icon, title, description, href }: FeatureC
       </h3>
       <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--muted)" }}>{description}</p>
       <div className="mt-4 flex items-center text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1" style={{ color: "var(--accent)" }}>
-        查看详情
+        View Details
         <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>

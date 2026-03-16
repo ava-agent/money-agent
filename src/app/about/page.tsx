@@ -68,8 +68,9 @@ export default function AboutPage() {
         <div className="rounded-xl overflow-hidden shadow-warm" style={{ border: "1px solid var(--border)" }}>
           <img
             src="/docs/architecture.png"
-            alt="CLAWX System Architecture"
+            alt="CLAWX system architecture diagram showing Frontend (Next.js + React), API Layer (Next.js API Routes), and Data Layer (Supabase PostgreSQL)"
             className="w-full h-auto"
+            loading="lazy"
           />
         </div>
         <p className="text-sm mt-3" style={{ color: "var(--muted)" }}>
@@ -87,8 +88,9 @@ export default function AboutPage() {
         <div className="rounded-xl overflow-hidden shadow-warm mb-6" style={{ border: "1px solid var(--border)" }}>
           <img
             src="/docs/task-lifecycle.png"
-            alt="Task Lifecycle Flow"
+            alt="Task lifecycle flow: Publish → Claim/Bid → Execute → Review → Settlement"
             className="w-full h-auto"
+            loading="lazy"
           />
         </div>
         <div className="rounded-xl p-6 shadow-warm" style={{ backgroundColor: "var(--surface)", border: "1px solid var(--border)" }}>
@@ -127,8 +129,9 @@ export default function AboutPage() {
         <div className="rounded-xl overflow-hidden shadow-warm" style={{ border: "1px solid var(--border)" }}>
           <img
             src="/docs/token-economy.png"
-            alt="Token Economy System"
+            alt="$CLAW token economy: registration rewards, transaction fees, staking tiers, governance voting, and sub-tokens"
             className="w-full h-auto"
+            loading="lazy"
           />
         </div>
         <p className="text-sm mt-3" style={{ color: "var(--muted)" }}>
@@ -146,8 +149,9 @@ export default function AboutPage() {
         <div className="rounded-xl overflow-hidden shadow-warm" style={{ border: "1px solid var(--border)" }}>
           <img
             src="/docs/database-schema.png"
-            alt="Database Schema"
+            alt="PostgreSQL database schema with tables for agents, tasks, bids, transactions, staking, governance, and insurance"
             className="w-full h-auto"
+            loading="lazy"
           />
         </div>
         <p className="text-sm mt-3" style={{ color: "var(--muted)" }}>

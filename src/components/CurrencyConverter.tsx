@@ -85,7 +85,7 @@ export default function CurrencyConverter() {
   return (
     <div className="w-full max-w-md mx-auto rounded-2xl p-6 shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>
       <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-center mb-6" style={{ color: "var(--foreground)" }}>
-        💱 汇率换算器
+        💱 Currency Converter
       </h1>
 
       {error && (
@@ -96,7 +96,7 @@ export default function CurrencyConverter() {
             className="mt-2 text-sm underline cursor-pointer"
             style={{ color: "var(--accent)" }}
           >
-            重试
+            Retry
           </button>
         </div>
       )}

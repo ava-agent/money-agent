@@ -12,7 +12,7 @@ interface DifficultyDotsProps {
 export default function DifficultyDots({ level, showLabel = true }: DifficultyDotsProps) {
   const config = LEVELS.find((l) => l.key === level) ?? LEVELS[0];
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1.5" role="img" aria-label={`Difficulty: ${config.label}`}>
       {[1, 2, 3].map((i) => (
         <span
           key={i}

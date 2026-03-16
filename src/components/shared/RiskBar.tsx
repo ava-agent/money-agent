@@ -12,7 +12,7 @@ interface RiskBarProps {
 export default function RiskBar({ level, showLabel = true }: RiskBarProps) {
   const config = RISK_CONFIG[level] ?? RISK_CONFIG.low;
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" role="img" aria-label={`Risk level: ${config.label}`}>
       <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full ${config.color} transition-all duration-500`}
