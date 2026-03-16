@@ -8,7 +8,11 @@ export async function GET() {
   const envInfo = {
     supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
     hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    keyPrefix: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 20) + "...",
   };
+
+  // Test connection with auth check
+  const { data: authData, error: authError } = await supabase.auth.getSession();
 
   // Count task_templates
   const { count, error: countError } = await supabase
@@ -23,9 +27,12 @@ export async function GET() {
 
   return NextResponse.json({
     env: envInfo,
+    auth: { session: !!authData?.session, error: authError?.message },
     count,
     countError: countError?.message,
+    countErrorFull: countError,
     templates,
     dataError: dataError?.message,
+    dataErrorFull: dataError,
   });
 }
