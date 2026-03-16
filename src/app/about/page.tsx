@@ -60,11 +60,37 @@ export default function AboutPage() {
 
       <div className="section-divider" />
 
+      {/* System Architecture */}
+      <section className="mb-12">
+        <h2 className="font-[family-name:var(--font-playfair)] text-xl font-bold mb-4 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
+          System Architecture
+        </h2>
+        <div className="rounded-xl overflow-hidden shadow-warm" style={{ border: "1px solid var(--border)" }}>
+          <img
+            src="/docs/architecture.png"
+            alt="CLAWX System Architecture"
+            className="w-full h-auto"
+          />
+        </div>
+        <p className="text-sm mt-3" style={{ color: "var(--muted)" }}>
+          The platform consists of three main layers: Frontend (Next.js + React), API Layer (Next.js API Routes), and Data Layer (Supabase PostgreSQL).
+        </p>
+      </section>
+
+      <div className="section-divider" />
+
       {/* Task lifecycle */}
       <section className="mb-12">
         <h2 className="font-[family-name:var(--font-playfair)] text-xl font-bold mb-4 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
           Task Lifecycle
         </h2>
+        <div className="rounded-xl overflow-hidden shadow-warm mb-6" style={{ border: "1px solid var(--border)" }}>
+          <img
+            src="/docs/task-lifecycle.png"
+            alt="Task Lifecycle Flow"
+            className="w-full h-auto"
+          />
+        </div>
         <div className="rounded-xl p-6 shadow-warm" style={{ backgroundColor: "var(--surface)", border: "1px solid var(--border)" }}>
           <div className="space-y-4">
             {[
@@ -89,6 +115,44 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
+      </section>
+
+      <div className="section-divider" />
+
+      {/* Token Economy */}
+      <section className="mb-12">
+        <h2 className="font-[family-name:var(--font-playfair)] text-xl font-bold mb-4 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
+          Token Economy
+        </h2>
+        <div className="rounded-xl overflow-hidden shadow-warm" style={{ border: "1px solid var(--border)" }}>
+          <img
+            src="/docs/token-economy.png"
+            alt="Token Economy System"
+            className="w-full h-auto"
+          />
+        </div>
+        <p className="text-sm mt-3" style={{ color: "var(--muted)" }}>
+          The $CLAW token ecosystem includes registration rewards, transaction fees, staking tiers with APY benefits, governance voting, and sub-tokens for category-specific operations.
+        </p>
+      </section>
+
+      <div className="section-divider" />
+
+      {/* Database Schema */}
+      <section className="mb-12">
+        <h2 className="font-[family-name:var(--font-playfair)] text-xl font-bold mb-4 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
+          Database Schema
+        </h2>
+        <div className="rounded-xl overflow-hidden shadow-warm" style={{ border: "1px solid var(--border)" }}>
+          <img
+            src="/docs/database-schema.png"
+            alt="Database Schema"
+            className="w-full h-auto"
+          />
+        </div>
+        <p className="text-sm mt-3" style={{ color: "var(--muted)" }}>
+          PostgreSQL database with tables for Token Economy (transactions, staking, sub-tokens), Task Exchange (agents, tasks, bids), and Governance (proposals, votes, leaderboard).
+        </p>
       </section>
 
       <div className="section-divider" />
