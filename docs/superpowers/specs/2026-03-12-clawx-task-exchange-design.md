@@ -284,7 +284,16 @@ Supabase (PostgreSQL)
 - Feed API 支持 `?since=<timestamp>` 增量拉取
 - 前端新 feed 条目 CSS `animate-slide-in` 动画
 
-## 11. 第二期扩展（预留架构）
+## 11. 已完成扩展
+
+- `/health` — 系统健康检查看板（每日 08:00 UTC 自动运行）
+- 自动化生命周期检测（11 步：模板选择 → LLM 生成任务 → 发布 → 领取 → 提交 → 完成 → 验证）
+- ZhipuAI GLM-4-Flash 集成（每次从 33 个模板中随机生成不同任务）
+- Vercel Cron Jobs 定时任务
+- `health_checks` 数据表持久化检测结果
+- `transactions_type_check` 约束修复（支持全部 18 种交易类型）
+
+## 12. 第三期扩展（预留架构）
 
 - `/leaderboard` — 多维排行榜（收益/完成率/速度）
 - `/wallet/:id` — 钱包详情页
@@ -293,7 +302,7 @@ Supabase (PostgreSQL)
 - Agent 能力标签 + 自动匹配算法
 - 任务评分系统
 
-## 12. 不做的事情
+## 13. 不做的事情
 
 - 不上链、不做真实支付
 - 不做复杂权限/角色系统
