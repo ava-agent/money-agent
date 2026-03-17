@@ -1,17 +1,17 @@
+import Anthropic from "@anthropic-ai/sdk";
 import { createServerClient } from "@/lib/supabase/server";
 import { generateApiKey, hashApiKey } from "@/lib/apikey";
 import { createTask, claimTask, submitTask, completeTask } from "@/lib/services/tasks";
-import type { Agent } from "@/lib/supabase/types";
+import type { Agent, TaskTemplate } from "@/lib/supabase/types";
 
 /**
  * System health check: runs the full task lifecycle with two dedicated agents.
  *
- * Calls service functions directly (not HTTP) to avoid Vercel deployment protection
- * and to test the actual business logic + database + RPC functions.
+ * Each run picks a random task template and uses Claude to generate a realistic
+ * task (title, description, input_data) and submission (output_data), making
+ * every health check unique and more representative of real usage.
  *
- * Flow: ensure agents → top-up balance → createTask → claimTask → submitTask → completeTask → verify
- *
- * Results are stored in the health_checks table for historical tracking.
+ * Flow: pick template → LLM generates task → publish → claim → LLM generates result → submit → complete → verify
  */
 
 const SYSTEM_PUBLISHER = "system-health-publisher";
@@ -33,6 +33,17 @@ interface HealthCheckResult {
   publisher_id?: string;
   executor_id?: string;
   task_id?: string;
+  template_used?: string;
+}
+
+interface GeneratedTask {
+  title: string;
+  description: string;
+  input_data: Record<string, unknown>;
+}
+
+interface GeneratedResult {
+  output_data: Record<string, unknown>;
 }
 
 async function runStep(name: string, fn: () => Promise<string | void>): Promise<Step> {
@@ -45,6 +56,128 @@ async function runStep(name: string, fn: () => Promise<string | void>): Promise<
   }
 }
 
+// ─── LLM Task Generation ─────────────────────────────────────
+
+async function pickRandomTemplate(): Promise<TaskTemplate | null> {
+  const supabase = createServerClient();
+  const { data: templates } = await supabase
+    .from("task_templates")
+    .select("*, category:categories(name)")
+    .limit(100);
+
+  if (!templates || templates.length === 0) return null;
+  return templates[Math.floor(Math.random() * templates.length)] as TaskTemplate;
+}
+
+function buildClient(): Anthropic | null {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+  return new Anthropic({ apiKey });
+}
+
+async function generateTaskFromTemplate(template: TaskTemplate): Promise<GeneratedTask> {
+  const client = buildClient();
+  if (!client) {
+    // Fallback: generate without LLM
+    return {
+      title: `[Auto] ${template.title} #${Date.now().toString(36).slice(-4)}`,
+      description: `Automated task based on template: ${template.description}`,
+      input_data: { template_slug: template.slug, generated_at: new Date().toISOString() },
+    };
+  }
+
+  const response = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 300,
+    messages: [
+      {
+        role: "user",
+        content: `You are generating a realistic test task for an AI agent platform. Based on this template, create a specific, concrete task instance.
+
+Template: "${template.title}"
+Category: ${(template as unknown as Record<string, unknown>).category ? ((template as unknown as Record<string, { name: string }>).category?.name ?? "General") : "General"}
+Description: "${template.description}"
+Difficulty: ${template.difficulty}
+
+Return ONLY valid JSON (no markdown, no backticks):
+{
+  "title": "A specific task title (max 80 chars, do NOT include 'Health Check' or 'Test')",
+  "description": "A realistic 1-2 sentence task description",
+  "input_data": { "requirements": "...", "deadline_hours": <number>, "priority_note": "..." }
+}`,
+      },
+    ],
+  });
+
+  const text = response.content[0].type === "text" ? response.content[0].text : "";
+  try {
+    const parsed = JSON.parse(text);
+    return {
+      title: String(parsed.title).slice(0, 80),
+      description: String(parsed.description).slice(0, 500),
+      input_data: parsed.input_data ?? {},
+    };
+  } catch {
+    // JSON parse failed — use fallback
+    return {
+      title: `[Auto] ${template.title} #${Date.now().toString(36).slice(-4)}`,
+      description: `Automated task: ${template.description}`,
+      input_data: { template_slug: template.slug },
+    };
+  }
+}
+
+async function generateTaskResult(taskTitle: string, taskDescription: string): Promise<GeneratedResult> {
+  const client = buildClient();
+  if (!client) {
+    return {
+      output_data: {
+        status: "completed",
+        summary: "Task completed successfully by automated executor.",
+        completed_at: new Date().toISOString(),
+      },
+    };
+  }
+
+  const response = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 300,
+    messages: [
+      {
+        role: "user",
+        content: `You are an AI agent that just completed a task. Generate a realistic completion report.
+
+Task: "${taskTitle}"
+Description: "${taskDescription}"
+
+Return ONLY valid JSON (no markdown, no backticks):
+{
+  "status": "completed",
+  "summary": "Brief summary of what was done",
+  "deliverables": ["list", "of", "outputs"],
+  "metrics": { "time_spent_minutes": <number>, "quality_score": <0-100> },
+  "completed_at": "${new Date().toISOString()}"
+}`,
+      },
+    ],
+  });
+
+  const text = response.content[0].type === "text" ? response.content[0].text : "";
+  try {
+    return { output_data: JSON.parse(text) };
+  } catch {
+    return {
+      output_data: {
+        status: "completed",
+        summary: "Task completed successfully.",
+        completed_at: new Date().toISOString(),
+      },
+    };
+  }
+}
+
+// ─── System Agent Management ─────────────────────────────────
+
 async function ensureSystemAgent(name: string, description: string): Promise<Agent> {
   const supabase = createServerClient();
 
@@ -55,7 +188,6 @@ async function ensureSystemAgent(name: string, description: string): Promise<Age
     .single();
 
   if (existing) {
-    // Refresh API key and ensure no restrictions
     const apiKey = generateApiKey();
     const keyHash = hashApiKey(apiKey);
     await supabase
@@ -70,7 +202,6 @@ async function ensureSystemAgent(name: string, description: string): Promise<Age
     return { ...existing, tier: "diamond", restrictions_lift_at: null } as Agent;
   }
 
-  // Create new system agent
   const apiKey = generateApiKey();
   const keyHash = hashApiKey(apiKey);
   const { data: agent, error } = await supabase
@@ -89,10 +220,8 @@ async function ensureSystemAgent(name: string, description: string): Promise<Age
 
   if (error || !agent) throw new Error(`Failed to create system agent ${name}: ${error?.message}`);
 
-  // Grant registration bonus
   await supabase.rpc("grant_registration_bonus", { p_agent_id: agent.id });
 
-  // Re-fetch to get updated balance
   const { data: updated } = await supabase.from("agents").select("*").eq("id", agent.id).single();
   return updated as Agent;
 }
@@ -125,63 +254,92 @@ async function ensureSufficientBalance(agentId: string, minBalance: number): Pro
   return balance;
 }
 
+// ─── Main Lifecycle Check ────────────────────────────────────
+
 export async function runLifecycleCheck(): Promise<HealthCheckResult> {
   const totalStart = Date.now();
   const steps: Step[] = [];
   let publisherId: string | undefined;
   let executorId: string | undefined;
   let taskId: string | undefined;
+  let templateUsed: string | undefined;
   let publisher: Agent | undefined;
   let executor: Agent | undefined;
+  let generatedTask: GeneratedTask | undefined;
   const supabase = createServerClient();
 
-  // ── Step 1: Ensure system agents exist ──
+  // ── Step 1: Pick a random template ──
+  let template: TaskTemplate | null = null;
+  steps.push(
+    await runStep("pick_template", async () => {
+      template = await pickRandomTemplate();
+      if (!template) throw new Error("No templates found in database");
+      templateUsed = template.slug;
+      return `template="${template.title}" (${template.slug})`;
+    })
+  );
+  if (steps[steps.length - 1].status === "failed") {
+    return finalize("failed", totalStart, steps, "Template selection failed", supabase, publisherId, executorId, taskId, templateUsed);
+  }
+
+  // ── Step 2: Generate task content via LLM ──
+  steps.push(
+    await runStep("generate_task_content", async () => {
+      generatedTask = await generateTaskFromTemplate(template!);
+      return `title="${generatedTask.title}"`;
+    })
+  );
+  if (steps[steps.length - 1].status === "failed") {
+    return finalize("failed", totalStart, steps, "Task generation failed", supabase, publisherId, executorId, taskId, templateUsed);
+  }
+
+  // ── Step 3: Ensure system agents exist ──
   steps.push(
     await runStep("ensure_publisher_agent", async () => {
       publisher = await ensureSystemAgent(SYSTEM_PUBLISHER, "Automated health check publisher");
       publisherId = publisher.id;
-      return `id=${publisherId}, balance=${publisher.claw_balance}`;
+      return `id=${publisherId}`;
     })
   );
   if (steps[steps.length - 1].status === "failed") {
-    return finalize("failed", totalStart, steps, "Publisher agent setup failed", supabase, publisherId, executorId, taskId);
+    return finalize("failed", totalStart, steps, "Publisher agent setup failed", supabase, publisherId, executorId, taskId, templateUsed);
   }
 
   steps.push(
     await runStep("ensure_executor_agent", async () => {
       executor = await ensureSystemAgent(SYSTEM_EXECUTOR, "Automated health check executor");
       executorId = executor.id;
-      return `id=${executorId}, balance=${executor.claw_balance}`;
+      return `id=${executorId}`;
     })
   );
   if (steps[steps.length - 1].status === "failed") {
-    return finalize("failed", totalStart, steps, "Executor agent setup failed", supabase, publisherId, executorId, taskId);
+    return finalize("failed", totalStart, steps, "Executor agent setup failed", supabase, publisherId, executorId, taskId, templateUsed);
   }
 
-  // ── Step 2: Ensure publisher has enough balance for reward + fee ──
+  // ── Step 4: Ensure publisher has enough balance ──
   steps.push(
     await runStep("ensure_publisher_balance", async () => {
-      // Diamond tier has 2% fee, so need reward + 2% + buffer
       const bal = await ensureSufficientBalance(publisherId!, HEALTH_REWARD + 5);
-      // Re-fetch publisher with updated balance
       const { data } = await supabase.from("agents").select("*").eq("id", publisherId!).single();
       publisher = data as Agent;
       return `balance=${bal}`;
     })
   );
   if (steps[steps.length - 1].status === "failed") {
-    return finalize("failed", totalStart, steps, "Balance top-up failed", supabase, publisherId, executorId, taskId);
+    return finalize("failed", totalStart, steps, "Balance top-up failed", supabase, publisherId, executorId, taskId, templateUsed);
   }
 
-  // ── Step 3: Publish task via service layer ──
+  // ── Step 5: Publish task ──
   steps.push(
     await runStep("publish_task", async () => {
       const result = await createTask(publisher!, {
-        title: `[Health Check] ${new Date().toISOString().slice(0, 16)}`,
-        description: "Automated lifecycle health check task. Safe to ignore.",
+        title: generatedTask!.title,
+        description: generatedTask!.description,
         reward: HEALTH_REWARD,
         mode: "open",
         priority: "low",
+        template_id: template!.id,
+        input_data: generatedTask!.input_data,
       });
 
       if ("error" in result) throw new Error(`createTask: ${result.error}`);
@@ -190,10 +348,10 @@ export async function runLifecycleCheck(): Promise<HealthCheckResult> {
     })
   );
   if (steps[steps.length - 1].status === "failed") {
-    return finalize("failed", totalStart, steps, "Task publish failed", supabase, publisherId, executorId, taskId);
+    return finalize("failed", totalStart, steps, "Task publish failed", supabase, publisherId, executorId, taskId, templateUsed);
   }
 
-  // ── Step 4: Claim task ──
+  // ── Step 6: Claim task ──
   steps.push(
     await runStep("claim_task", async () => {
       const result = await claimTask(taskId!, executor!);
@@ -202,25 +360,23 @@ export async function runLifecycleCheck(): Promise<HealthCheckResult> {
     })
   );
   if (steps[steps.length - 1].status === "failed") {
-    return finalize("failed", totalStart, steps, "Task claim failed", supabase, publisherId, executorId, taskId);
+    return finalize("failed", totalStart, steps, "Task claim failed", supabase, publisherId, executorId, taskId, templateUsed);
   }
 
-  // ── Step 5: Submit task ──
+  // ── Step 7: Generate and submit result via LLM ──
   steps.push(
     await runStep("submit_task", async () => {
-      const result = await submitTask(taskId!, executor!, {
-        result: "Health check completed successfully",
-        timestamp: new Date().toISOString(),
-      });
+      const generated = await generateTaskResult(generatedTask!.title, generatedTask!.description);
+      const result = await submitTask(taskId!, executor!, generated.output_data);
       if ("error" in result) throw new Error(`submitTask: ${result.error}`);
       return `status=${result.data.status}`;
     })
   );
   if (steps[steps.length - 1].status === "failed") {
-    return finalize("failed", totalStart, steps, "Task submit failed", supabase, publisherId, executorId, taskId);
+    return finalize("failed", totalStart, steps, "Task submit failed", supabase, publisherId, executorId, taskId, templateUsed);
   }
 
-  // ── Step 6: Complete task (approve + release escrow) ──
+  // ── Step 8: Complete task ──
   steps.push(
     await runStep("complete_task", async () => {
       const result = await completeTask(taskId!, publisher!);
@@ -229,10 +385,10 @@ export async function runLifecycleCheck(): Promise<HealthCheckResult> {
     })
   );
   if (steps[steps.length - 1].status === "failed") {
-    return finalize("failed", totalStart, steps, "Task complete failed", supabase, publisherId, executorId, taskId);
+    return finalize("failed", totalStart, steps, "Task complete failed", supabase, publisherId, executorId, taskId, templateUsed);
   }
 
-  // ── Step 7: Verify final state ──
+  // ── Step 9: Verify final state ──
   steps.push(
     await runStep("verify_final_state", async () => {
       const { data: task } = await supabase
@@ -258,7 +414,7 @@ export async function runLifecycleCheck(): Promise<HealthCheckResult> {
     })
   );
 
-  // ── Step 8: Database connectivity check ──
+  // ── Step 10: Database connectivity ──
   steps.push(
     await runStep("database_connectivity", async () => {
       const { count, error } = await supabase
@@ -278,9 +434,12 @@ export async function runLifecycleCheck(): Promise<HealthCheckResult> {
     supabase,
     publisherId,
     executorId,
-    taskId
+    taskId,
+    templateUsed,
   );
 }
+
+// ─── Persistence ─────────────────────────────────────────────
 
 async function finalize(
   status: "passed" | "failed",
@@ -291,6 +450,7 @@ async function finalize(
   publisherId?: string,
   executorId?: string,
   taskId?: string,
+  templateUsed?: string,
 ): Promise<HealthCheckResult> {
   const duration_ms = Date.now() - totalStart;
 
@@ -304,7 +464,7 @@ async function finalize(
     task_id: taskId ?? null,
   });
 
-  return { status, duration_ms, steps, error, publisher_id: publisherId, executor_id: executorId, task_id: taskId };
+  return { status, duration_ms, steps, error, publisher_id: publisherId, executor_id: executorId, task_id: taskId, template_used: templateUsed };
 }
 
 export async function getHealthCheckHistory(limit = 30) {
