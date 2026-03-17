@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { createServerClient } from "@/lib/supabase/server";
 import { generateApiKey, hashApiKey } from "@/lib/apikey";
 import { createTask, claimTask, submitTask, completeTask } from "@/lib/services/tasks";
@@ -7,9 +7,9 @@ import type { Agent, TaskTemplate } from "@/lib/supabase/types";
 /**
  * System health check: runs the full task lifecycle with two dedicated agents.
  *
- * Each run picks a random task template and uses Claude to generate a realistic
- * task (title, description, input_data) and submission (output_data), making
- * every health check unique and more representative of real usage.
+ * Each run picks a random task template and uses ZhipuAI GLM to generate a
+ * realistic task (title, description, input_data) and submission (output_data),
+ * making every health check unique and more representative of real usage.
  *
  * Flow: pick template → LLM generates task → publish → claim → LLM generates result → submit → complete → verify
  */
@@ -69,16 +69,30 @@ async function pickRandomTemplate(): Promise<TaskTemplate | null> {
   return templates[Math.floor(Math.random() * templates.length)] as TaskTemplate;
 }
 
-function buildClient(): Anthropic | null {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+function buildClient(): OpenAI | null {
+  const apiKey = process.env.GLM_API_KEY;
   if (!apiKey) return null;
-  return new Anthropic({ apiKey });
+  return new OpenAI({
+    apiKey,
+    baseURL: "https://open.bigmodel.cn/api/paas/v4",
+  });
+}
+
+async function chatJSON(client: OpenAI, prompt: string): Promise<string> {
+  const response = await client.chat.completions.create({
+    model: "glm-4-flash",
+    max_tokens: 300,
+    messages: [{ role: "user", content: prompt }],
+  });
+  let text = response.choices[0]?.message?.content ?? "";
+  // Strip markdown code fences that GLM often wraps around JSON
+  text = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+  return text;
 }
 
 async function generateTaskFromTemplate(template: TaskTemplate): Promise<GeneratedTask> {
   const client = buildClient();
   if (!client) {
-    // Fallback: generate without LLM
     return {
       title: `[Auto] ${template.title} #${Date.now().toString(36).slice(-4)}`,
       description: `Automated task based on template: ${template.description}`,
@@ -86,16 +100,14 @@ async function generateTaskFromTemplate(template: TaskTemplate): Promise<Generat
     };
   }
 
-  const response = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 300,
-    messages: [
-      {
-        role: "user",
-        content: `You are generating a realistic test task for an AI agent platform. Based on this template, create a specific, concrete task instance.
+  const categoryName = (template as unknown as Record<string, { name?: string }>).category?.name ?? "General";
+
+  const text = await chatJSON(
+    client,
+    `You are generating a realistic test task for an AI agent platform. Based on this template, create a specific, concrete task instance.
 
 Template: "${template.title}"
-Category: ${(template as unknown as Record<string, unknown>).category ? ((template as unknown as Record<string, { name: string }>).category?.name ?? "General") : "General"}
+Category: ${categoryName}
 Description: "${template.description}"
 Difficulty: ${template.difficulty}
 
@@ -104,12 +116,9 @@ Return ONLY valid JSON (no markdown, no backticks):
   "title": "A specific task title (max 80 chars, do NOT include 'Health Check' or 'Test')",
   "description": "A realistic 1-2 sentence task description",
   "input_data": { "requirements": "...", "deadline_hours": <number>, "priority_note": "..." }
-}`,
-      },
-    ],
-  });
+}`
+  );
 
-  const text = response.content[0].type === "text" ? response.content[0].text : "";
   try {
     const parsed = JSON.parse(text);
     return {
@@ -118,7 +127,6 @@ Return ONLY valid JSON (no markdown, no backticks):
       input_data: parsed.input_data ?? {},
     };
   } catch {
-    // JSON parse failed — use fallback
     return {
       title: `[Auto] ${template.title} #${Date.now().toString(36).slice(-4)}`,
       description: `Automated task: ${template.description}`,
@@ -139,13 +147,9 @@ async function generateTaskResult(taskTitle: string, taskDescription: string): P
     };
   }
 
-  const response = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 300,
-    messages: [
-      {
-        role: "user",
-        content: `You are an AI agent that just completed a task. Generate a realistic completion report.
+  const text = await chatJSON(
+    client,
+    `You are an AI agent that just completed a task. Generate a realistic completion report.
 
 Task: "${taskTitle}"
 Description: "${taskDescription}"
@@ -157,12 +161,9 @@ Return ONLY valid JSON (no markdown, no backticks):
   "deliverables": ["list", "of", "outputs"],
   "metrics": { "time_spent_minutes": <number>, "quality_score": <0-100> },
   "completed_at": "${new Date().toISOString()}"
-}`,
-      },
-    ],
-  });
+}`
+  );
 
-  const text = response.content[0].type === "text" ? response.content[0].text : "";
   try {
     return { output_data: JSON.parse(text) };
   } catch {
