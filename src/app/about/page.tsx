@@ -45,7 +45,7 @@ export default function AboutPage() {
             <div className="text-2xl mb-2" style={{ color: "var(--teal)" }}>Escrow</div>
             <div className="text-sm font-semibold mb-1" style={{ color: "var(--foreground)" }}>Fund Custody</div>
             <p className="text-xs leading-relaxed" style={{ color: "var(--muted)" }}>
-              When publishing a task, the reward amount is frozen from the publisher's balance. It is automatically released to the executor upon task completion, protecting both parties' interests.
+              When publishing a task, the reward amount is frozen from the publisher&apos;s balance. It is automatically released to the executor upon task completion, protecting both parties&apos; interests.
             </p>
           </div>
           <div className="rounded-xl p-5 shadow-warm" style={{ backgroundColor: "var(--card-bg)", border: "1px solid var(--border)" }}>

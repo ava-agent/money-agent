@@ -164,7 +164,7 @@ Usage: `border-cat-job`, `bg-cat-job-light`, `text-cat-job`
 npm install
 
 # Configure environment variables
-cp .env.local.example .env.local
+cp .env.example .env.local
 # Fill in NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 # Start development server
@@ -252,6 +252,8 @@ The diagram above illustrates the complete task flow from publishing to completi
 ## Deployment
 
 The project is deployed to Vercel with Supabase as the database.
+
+Detailed deployment notes are in [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ### Environment Variables
 
