@@ -856,7 +856,7 @@ openclaw config set channels.dingtalk.clientSecret "你的ClientSecret"
 |------|------|------|
 | DeepSeek R1 | 推理能力强，性价比高 | 极低 |
 | 通义千问 Qwen 2.5 | 中文能力优秀 | 有免费额度 |
-| 智谱 GLM | 国产大模型 | 较低 |
+| 火山方舟 Ark / 豆包 | 国产大模型，CodingPlan 可复用 | 较低 |
 | 本地 Ollama | 完全免费 | 仅硬件成本 |
 
 ---
@@ -1348,15 +1348,15 @@ Day 26-30: 优化流程、建立 SOP、开始扩展客户
 | 项目 | 类型 | 线上地址 | 技术栈 | 当前状态 | 变现潜力 |
 |------|------|---------|--------|---------|---------|
 | **money-agent** | 赚钱指南 Web | money-agent-beryl.vercel.app | Next.js 16 + Supabase + React-markdown | 已上线 | ⭐⭐⭐⭐ |
-| **english-agent** | AI 英语学习 | english-agent.vercel.app | Next.js 16 + GLM-4 + FSRS | 已上线 | ⭐⭐⭐⭐⭐ |
-| **name-agent** | AI 起名 | name-agent.vercel.app | Next.js 16 + GLM-4 + 语音 | 已上线 | ⭐⭐⭐⭐⭐ |
+| **english-agent** | AI 英语学习 | english-agent.vercel.app | Next.js 16 + Ark CodingPlan + FSRS | 已上线 | ⭐⭐⭐⭐⭐ |
+| **name-agent** | AI 起名 | name-agent.vercel.app | Next.js 16 + Ark CodingPlan + 语音待接入 | 已上线 | ⭐⭐⭐⭐⭐ |
 | **fish-agent** | 像素钓鱼游戏 | Expo 移动端 | React Native + Expo + Supabase | 已上线 | ⭐⭐⭐ |
 | **health-agent** | 产检指南 | React + Vite | React + Supabase + Shadcn/UI | 已上线 | ⭐⭐⭐ |
 | **spa-agent** | 按摩 SPA 百科 | massagespaguide.vercel.app | Expo + Express + Supabase | 已上线 | ⭐⭐⭐ |
 | **vedio-agent** | AI 多媒体工具百科 | VitePress | VitePress + Vue + Supabase | 已上线 | ⭐⭐⭐⭐ |
 | **vietnam-agent** | 越南旅游指南 | Expo 移动端 | React Native + TypeScript | 已上线 | ⭐⭐ |
 | **dog-agent** | 宠物狗百科 | Expo 移动端 | Expo + Supabase | 开发中 | ⭐⭐⭐ |
-| **maichong（脉冲）** | 生活节奏协调器 | maichong.vercel.app | Vite + Supabase + GLM-4 | 已上线 | ⭐⭐⭐ |
+| **maichong（脉冲）** | 生活节奏协调器 | maichong.vercel.app | Vite + Supabase + Ark | 已上线 | ⭐⭐⭐ |
 | **promotion-agent** | 多平台自动发布 CLI | CLI 工具 | Python + Typer + 11 平台 | 已上线 | ⭐⭐⭐⭐⭐ |
 | **brag** | 技术知识库 | GitHub | 1000+ Markdown 文件 | 持续更新 | ⭐⭐⭐⭐ |
 
@@ -1368,7 +1368,7 @@ Day 26-30: 优化流程、建立 SOP、开始扩展客户
 ├─────────────────────────────────────────────────────┤
 │ 前端: Next.js 16 / React 19 / Expo / Vue 3 / Vite   │
 │ 后端: Supabase / Express / tRPC / Edge Functions     │
-│ AI:   GLM-4 / Claude / OpenAI / Ollama               │
+│ AI:   Ark / Claude / OpenAI / Ollama                 │
 │ 移动: React Native + Expo (iOS & Android)            │
 │ 部署: Vercel (11+ 站点) / Supabase Cloud             │
 │ 自动化: promotion-agent (11 平台分发)                  │
@@ -1395,7 +1395,7 @@ Day 26-30: 优化流程、建立 SOP、开始扩展客户
 - 8 个目的地 + 6 种场景 + 3 个 AI 角色
 - FSRS 间隔重复算法的词汇系统
 - Telegram/微信通知 + GitHub 学习报告
-- GLM-4 对话引擎（成本远低于 Speak 用的 GPT-4）
+- Ark CodingPlan 对话引擎（成本远低于 Speak 用的 GPT-4）
 
 **OpenClaw 赋能方案：**
 
@@ -1622,7 +1622,7 @@ message: |
 | 模式 | 策略 | 预期收入 |
 |------|------|---------|
 | 付费专栏 | 将 AI Agent 开发系列整理为付费专栏（知乎/小报童） | ¥3,000-10,000/月 |
-| SaaS 模板 | 将 Next.js+Supabase+GLM-4 技术栈打包为付费模板 | ¥5,000-20,000/月 |
+| SaaS 模板 | 将 Next.js+Supabase+Ark 技术栈打包为付费模板 | ¥5,000-20,000/月 |
 | 技术咨询 | AI Agent 开发咨询（基于丰富的实战经验） | ¥500-2,000/小时 |
 | 在线课程 | 录制"从 0 到 1 构建 AI Agent"视频课程 | ¥10,000-50,000/期 |
 
@@ -1691,7 +1691,7 @@ tags: [content, social-media, automation, publishing, chinese]
 
 ## 二十六、SaaS 模板销售策略
 
-> 参考 ShipFast ($199, 月入 $2 万+)、Supastarter ($349, 月入 $4,700+)，你的 Next.js 16 + Supabase + GLM-4 技术栈完全可以打包出售。
+> 参考 ShipFast ($199, 月入 $2 万+)、Supastarter ($349, 月入 $4,700+)，你的 Next.js 16 + Supabase + Ark 技术栈完全可以打包出售。
 
 ### 26.1 可打包的 SaaS 模板
 
@@ -1701,7 +1701,7 @@ tags: [content, social-media, automation, publishing, chinese]
 包含内容：
 ├── Next.js 16 + TypeScript (strict mode)
 ├── Supabase (Auth + Database + Edge Functions)
-├── GLM-4 AI 对话集成（OpenAI 兼容接口）
+├── Ark AI 对话集成（OpenAI 兼容接口）
 ├── Shadcn/UI 组件库
 ├── Zustand 状态管理
 ├── Vercel 一键部署
@@ -1734,7 +1734,7 @@ tags: [content, social-media, automation, publishing, chinese]
 包含内容：
 ├── Expo + React Native + TypeScript
 ├── Supabase 后端集成
-├── AI 对话组件（GLM-4/Claude）
+├── AI 对话组件（Ark/Claude）
 ├── NativeWind 样式方案
 ├── 底部导航 + 抽屉菜单
 ├── AsyncStorage 本地缓存
@@ -1879,7 +1879,7 @@ Day 3:
 ```
 Day 4-7:
   - 每天通过 OpenClaw + promotion-agent 发布 1 篇技术文章到 11 个平台
-  - 主题轮换：AI Agent 开发 / Next.js 实战 / Supabase 技巧 / GLM-4 集成
+  - 主题轮换：AI Agent 开发 / Next.js 实战 / Supabase 技巧 / Ark 集成
   - 每篇文章嵌入产品链接（english-agent / name-agent / SaaS 模板）
   - 监控各平台数据，识别高转化内容类型
 
