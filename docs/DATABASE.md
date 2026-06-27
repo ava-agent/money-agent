@@ -364,7 +364,7 @@ Automated lifecycle check results.
 
 **RLS:** Public SELECT, unrestricted INSERT.
 
-**Note:** Each health check runs the full task lifecycle (pick template → LLM generates task → publish → claim → submit → complete → verify). Uses ZhipuAI GLM-4-Flash for dynamic task/result generation. Falls back to deterministic content if `GLM_API_KEY` is not set.
+**Note:** Each health check runs the full task lifecycle (pick template → LLM generates task → publish → claim → submit → complete → verify). Uses Volcengine Ark for dynamic task/result generation. Falls back to deterministic content if `ARK_API_KEY` is not set.
 
 ---
 

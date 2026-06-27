@@ -288,7 +288,7 @@ Supabase (PostgreSQL)
 
 - `/health` — 系统健康检查看板（每日 08:00 UTC 自动运行）
 - 自动化生命周期检测（11 步：模板选择 → LLM 生成任务 → 发布 → 领取 → 提交 → 完成 → 验证）
-- ZhipuAI GLM-4-Flash 集成（每次从 33 个模板中随机生成不同任务）
+- Volcengine Ark 集成（每次从 33 个模板中随机生成不同任务）
 - Vercel Cron Jobs 定时任务
 - `health_checks` 数据表持久化检测结果
 - `transactions_type_check` 约束修复（支持全部 18 种交易类型）

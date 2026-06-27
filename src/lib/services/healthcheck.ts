@@ -7,7 +7,7 @@ import type { Agent, TaskTemplate } from "@/lib/supabase/types";
 /**
  * System health check: runs the full task lifecycle with two dedicated agents.
  *
- * Each run picks a random task template and uses ZhipuAI GLM to generate a
+ * Each run picks a random task template and can use Volcengine Ark to generate a
  * realistic task (title, description, input_data) and submission (output_data),
  * making every health check unique and more representative of real usage.
  *
@@ -17,6 +17,8 @@ import type { Agent, TaskTemplate } from "@/lib/supabase/types";
 const SYSTEM_PUBLISHER = "system-health-publisher";
 const SYSTEM_EXECUTOR = "system-health-executor";
 const HEALTH_REWARD = 10;
+const DEFAULT_ARK_BASE_URL = "https://ark.cn-beijing.volces.com/api/coding/v3";
+const DEFAULT_ARK_MODEL = "doubao-seed-2-0-code-preview-260215";
 
 interface Step {
   name: string;
@@ -70,24 +72,42 @@ async function pickRandomTemplate(): Promise<TaskTemplate | null> {
 }
 
 function buildClient(): OpenAI | null {
-  const apiKey = process.env.GLM_API_KEY;
+  const apiKey = process.env.ARK_API_KEY;
   if (!apiKey) return null;
   return new OpenAI({
     apiKey,
-    baseURL: "https://open.bigmodel.cn/api/paas/v4",
+    baseURL: process.env.ARK_BASE_URL ?? DEFAULT_ARK_BASE_URL,
   });
+}
+
+function parseJsonFromModel(text: string): unknown {
+  const normalized = text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "");
+
+  try {
+    return JSON.parse(normalized);
+  } catch {
+    const match = normalized.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("Model response did not include JSON");
+    return JSON.parse(match[0]);
+  }
 }
 
 async function chatJSON(client: OpenAI, prompt: string): Promise<string> {
   const response = await client.chat.completions.create({
-    model: "glm-4-flash",
+    model: process.env.ARK_CHAT_MODEL ?? DEFAULT_ARK_MODEL,
     max_tokens: 300,
-    messages: [{ role: "user", content: prompt }],
+    messages: [
+      {
+        role: "system",
+        content: "Return only valid JSON. Do not wrap the response in markdown.",
+      },
+      { role: "user", content: prompt },
+    ],
   });
-  let text = response.choices[0]?.message?.content ?? "";
-  // Strip markdown code fences that GLM often wraps around JSON
-  text = text.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
-  return text;
+  return response.choices[0]?.message?.content ?? "";
 }
 
 async function generateTaskFromTemplate(template: TaskTemplate): Promise<GeneratedTask> {
@@ -120,11 +140,14 @@ Return ONLY valid JSON (no markdown, no backticks):
   );
 
   try {
-    const parsed = JSON.parse(text);
+    const parsed = parseJsonFromModel(text) as Record<string, unknown>;
     return {
       title: String(parsed.title).slice(0, 80),
       description: String(parsed.description).slice(0, 500),
-      input_data: parsed.input_data ?? {},
+      input_data:
+        parsed.input_data && typeof parsed.input_data === "object"
+          ? (parsed.input_data as Record<string, unknown>)
+          : {},
     };
   } catch {
     return {
@@ -165,7 +188,13 @@ Return ONLY valid JSON (no markdown, no backticks):
   );
 
   try {
-    return { output_data: JSON.parse(text) };
+    const parsed = parseJsonFromModel(text);
+    return {
+      output_data:
+        parsed && typeof parsed === "object"
+          ? (parsed as Record<string, unknown>)
+          : {},
+    };
   } catch {
     return {
       output_data: {
