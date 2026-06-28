@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
+import { agentProfilePath } from "@/lib/routes";
 
 const COLORS = ["#ff6b35", "#00d4aa", "#a78bfa", "#fbbf24", "#f472b6", "#38bdf8", "#34d399", "#fb923c"];
 
@@ -34,7 +35,7 @@ export default function TrendingAgents() {
         {agents.map((agent, i) => (
           <Link
             key={agent.id}
-            href={`/agents/${agent.name}`}
+            href={agentProfilePath(agent.name)}
             className="shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 group"
             style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
           >

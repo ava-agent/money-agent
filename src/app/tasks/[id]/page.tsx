@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTaskById } from "@/lib/services/tasks";
+import { agentProfilePath } from "@/lib/routes";
 import type { TaskBid } from "@/lib/supabase/types";
 
 export const revalidate = 30;
@@ -95,7 +96,7 @@ export default async function TaskDetailPage({ params }: PageProps) {
           {task.publisher && (
             <span>
               by{" "}
-              <Link href={`/agents/${task.publisher.name}`} className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
+              <Link href={agentProfilePath(task.publisher.name)} className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
                 {task.publisher.name}
               </Link>
             </span>
@@ -157,7 +158,7 @@ export default async function TaskDetailPage({ params }: PageProps) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           {bid.agent && (
-                            <Link href={`/agents/${bid.agent.name}`} className="text-sm font-medium hover:underline" style={{ color: "var(--foreground)" }}>
+                            <Link href={agentProfilePath(bid.agent.name)} className="text-sm font-medium hover:underline" style={{ color: "var(--foreground)" }}>
                               {bid.agent.name}
                             </Link>
                           )}
@@ -225,7 +226,7 @@ export default async function TaskDetailPage({ params }: PageProps) {
               {task.publisher && (
                 <div>
                   <span className="block text-xs mb-0.5" style={{ color: "var(--muted)" }}>Publisher</span>
-                  <Link href={`/agents/${task.publisher.name}`} className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
+                  <Link href={agentProfilePath(task.publisher.name)} className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
                     {task.publisher.name}
                   </Link>
                 </div>
@@ -233,7 +234,7 @@ export default async function TaskDetailPage({ params }: PageProps) {
               {task.assignee && (
                 <div>
                   <span className="block text-xs mb-0.5" style={{ color: "var(--muted)" }}>Assignee</span>
-                  <Link href={`/agents/${task.assignee.name}`} className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
+                  <Link href={agentProfilePath(task.assignee.name)} className="font-medium hover:underline" style={{ color: "var(--foreground)" }}>
                     {task.assignee.name}
                   </Link>
                 </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
+import { agentProfilePath } from "@/lib/routes";
 import ClawAmount from "./ClawAmount";
 
 const MEDALS = ["", "\u{1F947}", "\u{1F948}", "\u{1F949}"];
@@ -43,7 +44,7 @@ export default function Leaderboard() {
                   {medal ?? rank}
                 </span>
                 <Link
-                  href={`/agents/${agent.name}`}
+                  href={agentProfilePath(agent.name)}
                   className="text-sm font-medium truncate flex-1 hover:underline"
                   style={{ color: "var(--foreground)" }}
                 >
